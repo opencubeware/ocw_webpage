@@ -1,0 +1,46 @@
+<div class="row board__records">
+  <%= OcwWebpageWeb.PageView.render(
+    "record_card.html",
+    %{
+      background_color: "ocw-red",
+      record_type: "WR",
+      single_person: @wr.single.person,
+      single_time: @wr.single.time,
+      average_person: @wr.average.person,
+      average_time: @wr.average.time
+    }
+  ) %>
+  <%= OcwWebpageWeb.PageView.render(
+    "record_card.html",
+    %{
+      background_color: "ocw-blue",
+      record_type: "CR",
+      single_person: @cr.single.person,
+      single_time: @cr.single.time,
+      average_person: @cr.average.person,
+      average_time: @cr.average.time
+    }
+  ) %>
+  <%= OcwWebpageWeb.PageView.render(
+    "record_card.html",
+    %{
+      background_color: "ocw-grey",
+      record_type: "NR",
+      single_person: @nr.single.person,
+      single_time: @nr.single.time,
+      average_person: @nr.average.person,
+      average_time: @nr.average.time
+    }
+  ) %>
+  <%= OcwWebpageWeb.PageView.render(
+    "record_card.html",
+    %{
+      background_color: "ocw-light-grey",
+      record_type: "CB",
+      single_person: @cb.single.person,
+      single_time: @cb.single.time,
+      average_person: @cb.average.person,
+      average_time: @cb.average.time
+    }
+  ) %>
+</div>

@@ -1,0 +1,29 @@
+<div class="col s3 record-card <%= @background_color %> no-padding">
+  <div class="col s3 type no-padding">
+    <%= @record_type %>
+  </div>
+  <div class="col s9 times no-padding">
+    <div class="col s12 times__single no-padding">
+      <div class="col s3 single-average no-padding">
+        <b>SINGLE</b>
+      </div>
+      <div class="col s5 times__single no-padding">
+        <%= @single_person %>
+      </div>
+      <div class="col s4 times__single no-padding">
+        <%= @single_time %>
+      </div>
+    </div>
+    <div class="col s12 times__single no-padding">
+      <div class="col s3 single-average no-padding">
+        <b>AVG</b>
+      </div>
+      <div class="col s5 times__single no-padding">
+        <%= @average_person %>
+      </div>
+      <div class="col s4 times__single no-padding">
+        <%= @average_time %>
+      </div>
+    </div>
+  </div>
+</div>
