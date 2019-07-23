@@ -1,6 +1,5 @@
 defmodule OcwWebpageWeb.TournamentLive do
   use Phoenix.LiveView
-  import Phoenix.Controller, only: [json: 2]
   alias OcwWebpage.Services
 
   def render(assigns) do
@@ -13,7 +12,6 @@ defmodule OcwWebpageWeb.TournamentLive do
         <div class="col s9 board">
           <%= OcwWebpageWeb.PageView.render("main_board_top.html", assigns) %>
           <%= OcwWebpageWeb.PageView.render("main_board_records.html", assigns.records) %>
-          <MainBoardRecords data=%{MainBoardRecordStub} />
           %{results && (
             <MainBoardTable data=%{results} />
           )}
