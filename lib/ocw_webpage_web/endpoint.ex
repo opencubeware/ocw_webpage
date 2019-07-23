@@ -1,6 +1,8 @@
 defmodule OcwWebpageWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :ocw_webpage
 
+  socket "/live", Phoenix.LiveView.Socket
+
   socket "/socket", OcwWebpageWeb.UserSocket,
     websocket: true,
     longpoll: false
