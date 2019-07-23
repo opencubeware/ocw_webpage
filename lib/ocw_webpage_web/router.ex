@@ -35,6 +35,7 @@ defmodule OcwWebpageWeb.Router do
   scope "/", OcwWebpageWeb do
     pipe_through(:browser)
     live("/counter", CounterLive)
+    live("/tournaments/:tournament_name/events/:event_name/rounds/:round_name", TournamentLive)
     get("/*path", PageController, :index)
   end
 end

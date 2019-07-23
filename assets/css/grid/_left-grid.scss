@@ -1,0 +1,85 @@
+.home-page,
+.news-page {
+  .left1 {
+    grid-area: left1;
+  }
+
+  .left2 {
+    grid-area: left2;
+  }
+
+  .left3 {
+    grid-area: left3;
+  }
+
+  .left4 {
+    grid-area: left4;
+  }
+
+  .left5 {
+    grid-area: left5;
+  }
+
+  .left6 {
+    grid-area: left6;
+  }
+
+  .left7 {
+    grid-area: left7;
+  }
+
+  .left8 {
+    grid-area: left8;
+  }
+
+  .left9 {
+    grid-area: left9;
+  }
+
+  .left10 {
+    grid-area: left10;
+  }
+
+  .left11 {
+    grid-area: left11;
+  }
+
+  .left12 {
+    grid-area: left12;
+  }
+
+  .left13 {
+    grid-area: left13;
+  }
+
+  .left14 {
+    grid-area: left14;
+  }
+
+  .left15 {
+    grid-area: left15;
+  }
+
+  .left1,
+  .left2,
+  .left3,
+  .left4,
+  .left5,
+  .left6,
+  .left7,
+  .left8,
+  .left9,
+  .left10,
+  .left11,
+  .left12,
+  .left13,
+  .left14,
+  .left15 {
+    @media (max-width: 800px) {
+      display: none;
+    }
+
+    border-left: 1px solid $color-grey;
+    border-top: 1px solid $color-grey;
+  }
+}

@@ -1,0 +1,256 @@
+@import "../grid/bottom-grid";
+@import "../grid/left-grid";
+@import "../grid/right-grid";
+
+.home-page {
+  display: grid;
+
+  @media (max-width: 799px) {
+    grid-template-columns: repeat(4, 0.3fr);
+    grid-template-rows: repeat(9, 0.3fr);
+    grid-template-areas:
+      'photo photo photo photo'
+      'photo photo photo photo'
+      'photo photo photo photo'
+      'big-note big-note big-note big-note'
+      'small-note-top small-note-top small-note-bottom small-note-bottom'
+      'footer1 footer2 footer3 logo-ocw'
+      '. logo-fb logo-github .';
+  }
+
+  @media (min-width: 800px) {
+    grid-template-columns: repeat(12, 0.5fr);
+    grid-template-rows: repeat(8, 0.5fr);
+    grid-template-areas:
+      'left1 left2 left3 photo photo photo photo photo photo right1 right2 right3'
+      'left4 left5 left6 photo photo photo photo photo photo right4 right5 right6'
+      'left7 left8 left9 photo photo photo photo photo photo right7 right8 right9'
+      'left10 left11 left12 big-note big-note big-note big-note small-note-top small-note-top right10 right11 right12'
+      'left13 left14 left15 big-note big-note big-note big-note small-note-bottom small-note-bottom right13 right14 right15'
+      'bottom1 bottom2 bottom3 bottom4 bottom5 bottom6 bottom7 bottom8 bottom9 bottom10 bottom11 bottom12'
+      '. . . footer1 footer2 footer3 logo-fb logo-github logo-ocw . . .';
+  }
+
+  .promo-photo__text {
+    padding-left: 8%;
+    color: white;
+    position: relative;
+    grid-row-start: 2;
+    grid-row-end: 2;
+
+    @media (min-width: 800px) {
+      grid-column-start: 7;
+      grid-column-end: 10;
+      font-size: 1.7vw;
+      align-self: center;
+    }
+
+    @media (max-width: 799px) {
+      grid-column-start: 3;
+      grid-column-end: 5;
+      font-size: 3vw;
+      align-self: center;
+    }
+
+  }
+
+  .big-card {
+    grid-area: big-note;
+    border-left: 1px solid $color-grey;
+    padding-left: 2%;
+
+    .news {
+      &__body, &__title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      &__top {
+        font-weight: bold;
+      }
+
+      &__body {
+        font-size: 0.8em;
+        color: $color-dark-grey;
+      }
+    }
+  }
+
+  .photo {
+    display: grid;
+    grid-area: photo;
+
+    img {
+      object-fit: cover;
+      width: 100%;
+
+      @media (max-width: 799px) {
+        height: 100%;
+      }
+    }
+  }
+
+  .homeSmallCard {
+    min-height: 6em;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+
+    &.blue--light {
+      background-color: $color-blue-light;
+    }
+
+    &.blue--dark {
+      background-color: $color-blue-dark;
+    }
+
+    .icon {
+      &__wrapper {
+        height: 100%;
+        display: flex;
+        align-items: center;
+
+        img {
+          width: 100%;
+          padding-left: 1em;
+          padding-right: 0.5em;
+        }
+      }
+    }
+
+    .infos {
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-left: 0.5em;
+      margin-right: 0.5em;
+
+      &__title {
+        @media (min-width: 800px) {
+          font-size: 1.1vw;
+        }
+
+        @media (max-width: 799px) {
+          font-size: 3vw;
+        }
+      }
+
+      &__body {
+        @media (min-width: 800px) {
+          font-size: 0.8vw;
+        }
+
+        @media (max-width: 799px) {
+          font-size: 2vw;
+        }
+      }
+    }
+  }
+
+  .logo {
+    display: flex;
+    justify-content: center;
+
+    &__grey {
+      background-color: $color-light-grey;
+    }
+
+    a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      img {
+        @media (min-width: 800px) {
+          width: 75%;
+        }
+        @media (max-width: 799px) {
+          width: 40%;
+        }
+      }
+    }
+  }
+
+  .footer {
+    &__links {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding-left: 10%;
+      justify-content: space-evenly;
+      margin: 0 !important;
+
+      @media (min-width: 800px) {
+        font-size: 0.8vw;
+      }
+
+      @media (max-width: 799px) {
+        font-size: 2.2vw;
+      }
+    }
+  }
+
+  .small-note-top {
+    grid-area: small-note-top;
+  }
+
+  .small-note-bottom {
+    grid-area: small-note-bottom;
+  }
+
+  .fb-image {
+    grid-area: logo-fb;
+  }
+
+  .gh-image {
+    grid-area: logo-github;
+    border-left: 1px solid $color-grey;
+  }
+
+  .read-more {
+    float: right;
+    padding-right: 1em;
+    color: $color-blue-dark;
+  }
+
+  .footer1 {
+    grid-area: footer1;
+  }
+
+  .footer2 {
+    grid-area: footer2;
+  }
+
+  .footer3 {
+    grid-area: footer3;
+  }
+
+  .ocw-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      @media (min-width: 800px) {
+        width: 75%;
+      }
+      @media (max-width: 799px) {
+        width: 40%;
+      }
+    }
+    grid-area: logo-ocw;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 5%;
+
+    @media (min-width: 800px) {
+      font-size: 0.8vw;
+    }
+
+    @media (max-width: 799px) {
+      font-size: 2.2vw;
+    }
+  }
+}

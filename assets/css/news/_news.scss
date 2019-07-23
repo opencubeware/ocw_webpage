@@ -1,0 +1,34 @@
+@import "../grid/bottom-grid";
+@import "../grid/left-grid";
+@import "../grid/right-grid";
+// this module is left to be edited for news page
+.news-page {
+  display: grid;
+
+  @media (max-width: 799px) {
+    grid-template-columns: repeat(4, 0.3fr);
+    grid-template-rows: repeat(9, 0.3fr);
+    grid-template-areas:
+      'photo photo photo photo'
+      'photo photo photo photo'
+      'photo photo photo photo'
+      'big-note big-note big-note big-note'
+      'small-note-top small-note-top small-note-bottom small-note-bottom'
+      'bottom1 bottom2 bottom3 bottom4 '
+      'footer1 footer2 footer3 footer4'
+      'logo-fb logo-github logo-ocw .';
+  }
+
+  @media (min-width: 800px) {
+    grid-template-columns: repeat(12, 0.5fr);
+    grid-template-rows: repeat(8, 0.5fr);
+    grid-template-areas:
+      'left1 left2 left3 photo photo photo photo photo photo right1 right2 right3'
+      'left4 left5 left6 photo photo photo photo photo photo right4 right5 right6'
+      'left7 left8 left9 photo photo photo photo photo photo right7 right8 right9'
+      'left10 left11 left12 big-note big-note big-note big-note small-note-top small-note-top right10 right11 right12'
+      'left13 left14 left15 big-note big-note big-note big-note small-note-bottom small-note-bottom right13 right14 right15'
+      'bottom1 bottom2 bottom3 bottom4 bottom5 bottom6 bottom7 bottom8 bottom9 bottom10 bottom11 bottom12'
+      '. . . footer1 footer2 footer3 logo-fb logo-github logo-ocw . . .';
+  }
+}

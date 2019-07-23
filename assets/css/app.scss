@@ -1,0 +1,35 @@
+@import "settings/variables";
+@import "./home/home";
+@import "./news/news";
+@import "./navbar/navbar";
+@import "./tournament/tournament-show-page";
+
+body {
+  font-family: $main-font;
+}
+
+.slash {
+  color: $color-grey;
+}
+
+.ocw-light-blue {
+  color: $color-blue-light;
+}
+
+.ocw-dark-blue {
+  color: $color-blue-dark;
+}
+
+.black-font {
+  color: black;
+}
+
+.collapsible-body {
+  padding: 0px !important;
+}
+
+.event-logo {
+  width: 2em;
+  height: auto;
+  vertical-align: middle;
+}

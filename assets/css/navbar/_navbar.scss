@@ -1,0 +1,43 @@
+.navbar {
+  display: grid;
+  align-items: center;
+
+  @media (max-width: 799px) {
+    grid-template-columns: repeat(4, 0.3fr);
+    grid-template-rows: 0.3fr;
+    grid-template-areas: "nav-logo navbar navbar navbar";
+  }
+
+  @media (min-width: 800px) {
+    grid-template-columns: repeat(12, 0.5fr);
+    grid-template-rows: 0.5fr;
+    grid-template-areas: "top1 top2 top3 nav-logo navbar navbar navbar navbar navbar top4 tap5 tap6";
+  }
+
+  &__ocw-logo {
+    grid-area: nav-logo;
+
+    a {
+      img {
+        vertical-align: middle;
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+        width: 100%;
+      }
+    }
+  }
+
+  &__item {
+    color: black;
+  }
+
+  &__items {
+    grid-area: navbar;
+    font-weight: bold;
+
+    ul {
+      display: flex;
+      justify-content: space-evenly;
+    }
+  }
+}
