@@ -5,7 +5,7 @@ defmodule OcwWebpage.MixProject do
     [
       app: :ocw_webpage,
       version: "0.1.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.9",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -38,10 +38,15 @@ defmodule OcwWebpage.MixProject do
       {:phoenix_ecto, "~> 4.0"},
       {:ecto_sql, "~> 3.1"},
       {:postgrex, ">= 0.0.0"},
+      {:mariaex, "~> 0.9.1"},
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
+      {:ex_machina, "~> 2.2"},
+      {:dialyxir, "~> 0.5.1", only: [:dev], runtime: false},
+      {:fe, git: "https://github.com/distributed-owls/fe", branch: "master"},
+      {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
       {:plug_cowboy, "~> 2.0"}
     ]
   end

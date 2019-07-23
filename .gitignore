@@ -4,6 +4,13 @@
 # If you run "mix test --cover", coverage assets end up here.
 /cover/
 
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
 # The directory Mix downloads your dependencies sources to.
 /deps/
 
