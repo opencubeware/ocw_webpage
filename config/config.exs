@@ -15,7 +15,10 @@ config :ocw_webpage, OcwWebpageWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "79dabJ1rulrHOj3FK1ZW35MpPi5Y7YbxO86fIae5ftrLGPMfpFfuVvDsplZTPIxw",
   render_errors: [view: OcwWebpageWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: OcwWebpage.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: OcwWebpage.PubSub, adapter: Phoenix.PubSub.PG2],
+  live_view: [
+    signing_salt: "hhFCOmBpu/s7QWgU5JvHgjxBcj0MZYaf"
+  ]
 
 # Configures Elixir's Logger
 config :logger, :console,

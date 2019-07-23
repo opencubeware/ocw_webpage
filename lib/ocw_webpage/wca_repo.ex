@@ -1,5 +1,5 @@
 defmodule OcwWebpage.WcaRepo do
-  use Ecto.Repo, otp_app: :ocw_webpage, adapter: Ecto.Adapters.MySQL
+  use Ecto.Repo, otp_app: :ocw_webpage, adapter: Ecto.Adapters.MyXQL
 
   @doc """
   Dynamically loads the repository url from the
