@@ -3,86 +3,72 @@
     color: white;
     background-color: $color-blue-dark;
   }
-
   .body {
     .board {
       &--top {
         text-align: center;
-
         .puzzle {
           font-weight: bold;
           padding: 0 2%;
         }
-
         .round {
           padding: 0 2%;
         }
-
         .description {
           font-size: 0.8rem;
           padding: 0 2%;
         }
       }
-
       &__records {
         .record-card {
           display: flex;
           align-items: center;
         }
-
         .type {
           margin-left: 5%;
           font-size: 2rem;
           font-weight: bold;
         }
-
         .times {
           font-size: 0.9rem;
         }
-
         .ocw-red {
           background: linear-gradient($color-red, $color-red-dark);
           color: white;
         }
-
         .ocw-blue {
           background: linear-gradient($color-blue-dark, $color-blue-darker);
           color: white;
         }
-
         .ocw-light-grey {
           background: linear-gradient($color-grey, $color-dark-grey);
         }
-
         .ocw-grey {
           background: linear-gradient($color-dark-grey, black);
           color: white;
         }
       }
-
       &__table {
         .table {
           table {
-            font-size: 0.8rem;
+            font-size: 1.2rem;
             table-layout: fixed;
-
             thead {
               tr {
-                background: linear-gradient($color-blue-light, $color-blue-dark);
+                background: linear-gradient(
+                  $color-blue-light,
+                  $color-blue-dark
+                );
                 color: white;
-
                 th:first-child {
                   width: 30px;
                 }
-
                 th:nth-child(2) {
                   width: 100px;
                 }
-
                 th:nth-child(3) {
                   width: 70px;
                 }
-
                 th {
                   border-radius: 0 !important;
                   font-weight: normal !important;
@@ -91,14 +77,12 @@
                 }
               }
             }
-
             tbody {
               tr {
                 td {
                   border-radius: 0 !important;
                   padding: 5px 5px !important;
                   vertical-align: middle;
-
                   img {
                     display: block;
                     margin-left: auto;
@@ -106,15 +90,12 @@
                     width: 45%;
                   }
                 }
-
                 td.average-red {
-                    color: $color-red;
-                    font-weight: bold;
+                  color: $color-red;
+                  font-weight: bold;
                 }
-
                 td.solve {
                   max-width: 60px;
-
                   img {
                     width: 20px;
                     height: auto;
@@ -127,7 +108,6 @@
         }
       }
     }
-
     .sidebar {
       &__card {
         .card-content {
@@ -135,40 +115,33 @@
           display: flex;
           align-items: center;
           justify-content: space-between;
-
           img {
             width: 100px;
             height: auto;
           }
-
           .text {
             font-size: 1.2rem;
             padding-left: 5%;
           }
         }
       }
-
       &__list {
         color: white;
-
         a {
           color: inherit;
         }
-
         .collapsible-header {
           background: linear-gradient($color-blue-light, $color-blue-dark);
-
           &:hover {
             background: linear-gradient($color-blue-dark, $color-blue-darker);
           }
         }
-
         .collapsible-body {
           .collection {
             color: black;
           }
           li.collection-item {
-            border-bottom:1px solid $color-grey;
+            border-bottom: 1px solid $color-grey;
             &:hover {
               background-color: $color-light-grey;
             }

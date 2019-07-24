@@ -12,9 +12,7 @@ defmodule OcwWebpageWeb.TournamentLive do
         <div class="col s9 board">
           <%= OcwWebpageWeb.PageView.render("main_board_top.html", assigns) %>
           <%= OcwWebpageWeb.PageView.render("main_board_records.html", assigns.records) %>
-          %{results && (
-            <MainBoardTable data=%{results} />
-          )}
+          <%= OcwWebpageWeb.PageView.render("main_board_table.html", assigns.round) %>
         </div>
         <div class="col s3 sidebar">
           %{tournamentName && (
@@ -40,6 +38,7 @@ defmodule OcwWebpageWeb.TournamentLive do
         socket
       ) do
     round = Services.Tournaments.fetch_round(tournament_name, event_name, round_name)
+    IO.inspect(round)
     records = stub_records()
     event_with_rounds = Services.Tournaments.fetch_event_with_rounds(tournament_name)
 

@@ -1,0 +1,40 @@
+<div class="row board__table">
+  <div class="col s12 table no-padding">
+    <table class="striped">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>| Competitor</th>
+          <th>| Country</th>
+          <th>| 1</th>
+          <th>| 2</th>
+          <th>| 3</th>
+          <th>| 4</th>
+          <th>| 5</th>
+          <th>| Best</th>
+          <th>| Avg</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for {result, index} <- Enum.with_index(@results) do %>
+          <tr key="<%= index %>">
+            <td key="<%= index %>">
+              <%= index + 1 %>
+            </td>
+            <td key="<%= result.competitor.first_name %> <%= result.competitor.last_name %>">
+              <b><%= result.competitor.first_name %> <%= result.competitor.last_name %></b>
+            </td>
+            <td key="<%= result.competitor.country.name %>">
+              <img src="/images/flags/<%= result.competitor.country.iso2 %>.svg"/>
+            </td>
+            <%= for attempt <- result.attempts do %>
+            <td><%= attempt %></td>
+            <% end %>
+            <td><%= result.best_solve %></td>
+            <td><%= result.average %></td>
+          </td>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
