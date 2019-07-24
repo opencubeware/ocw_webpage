@@ -5,6 +5,24 @@ defmodule OcwWebpage.DataAccess.Round do
   alias OcwWebpage.Constants
   alias OcwWebpage.Model
 
+  @topic inspect(__MODULE__)
+
+  def subscribe do
+    Phoenix.PubSub.subscribe(OcwWebpage.PubSub, @topic)
+  end
+
+  def update_testing() do
+    OcwWebpage.Repo.get(OcwWebpage.DataAccess.Schemas.Result, 1)
+    |> Ecto.Changeset.change(%{attempts: for(_ <- 1..5, do: Enum.random(100..800))})
+    |> OcwWebpage.Repo.update()
+    |> broadcast_change([:round, :updated])
+  end
+
+  defp broadcast_change({:ok, result}, event) do
+    Phoenix.PubSub.broadcast(OcwWebpage.PubSub, @topic, {__MODULE__, event, result})
+    {:ok, result}
+  end
+
   @spec fetch(String.t(), String.t(), String.t()) :: Result.t(Model.Round.t())
   def fetch(tournament_name, event_name, round_name) do
     full_round_query(tournament_name, event_name, round_name)

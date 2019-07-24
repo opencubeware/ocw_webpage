@@ -1,6 +1,7 @@
 defmodule OcwWebpageWeb.TournamentLive do
   use Phoenix.LiveView
   alias OcwWebpage.Services
+  alias OcwWebpage.DataAccess
 
   def render(assigns) do
     ~L"""
@@ -23,6 +24,7 @@ defmodule OcwWebpageWeb.TournamentLive do
           )}
         </div>
       </div>
+      <a class="waves-effect waves-light btn" phx-click="random">Random number</a>
     </div>
     """
   end
@@ -37,18 +39,43 @@ defmodule OcwWebpageWeb.TournamentLive do
         },
         socket
       ) do
-    round = Services.Tournaments.fetch_round(tournament_name, event_name, round_name)
-    IO.inspect(round)
-    records = stub_records()
-    event_with_rounds = Services.Tournaments.fetch_event_with_rounds(tournament_name)
+    DataAccess.Round.subscribe()
 
     new_socket =
       socket
-      |> assign(:round, round)
-      |> assign(:records, records)
-      |> assign(:event_with_rounds, event_with_rounds)
+      |> assign(:tournament_name, tournament_name)
+      |> assign(:event_name, event_name)
+      |> assign(:round_name, round_name)
 
-    {:ok, new_socket}
+    {:ok, fetch_all(new_socket)}
+  end
+
+  def handle_info({DataAccess.Round, [:round | _], _}, socket) do
+    {:noreply, fetch_all(socket)}
+  end
+
+  def handle_event("random", _params, socket) do
+    DataAccess.Round.update_testing()
+    {:noreply, socket}
+  end
+
+  defp fetch_all(
+         %{
+           assigns: %{
+             tournament_name: tournament_name,
+             round_name: round_name,
+             event_name: event_name
+           }
+         } = socket
+       ) do
+    round = Services.Tournaments.fetch_round(tournament_name, event_name, round_name)
+    records = stub_records()
+    event_with_rounds = Services.Tournaments.fetch_event_with_rounds(tournament_name)
+
+    socket
+    |> assign(:round, round)
+    |> assign(:records, records)
+    |> assign(:event_with_rounds, event_with_rounds)
   end
 
   defp stub_records() do
