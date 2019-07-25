@@ -37,8 +37,6 @@ defmodule OcwWebpage.Model.PersonTest do
       continent_name = "Europe"
       country_name = "Poland"
       country_iso2 = "pl"
-      continent = %{name: continent_name}
-      country = %{continent: continent, name: country_name, iso2: country_iso2}
       first_name = "John"
       last_name = "Doe"
       wca_id = "2009wcaid"
