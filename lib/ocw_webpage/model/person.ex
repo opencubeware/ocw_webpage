@@ -1,5 +1,4 @@
 defmodule OcwWebpage.Model.Person do
-  @derive Jason.Encoder
   defstruct [:first_name, :last_name, :wca_id, :country]
 
   alias OcwWebpage.Model

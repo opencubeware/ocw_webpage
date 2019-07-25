@@ -1,5 +1,4 @@
 defmodule OcwWebpage.Model.Round do
-  @derive Jason.Encoder
   alias OcwWebpage.Model
   defstruct [:event_name, :name, :results, :tournament_name]
 

@@ -1,5 +1,4 @@
 defmodule OcwWebpage.Model.Result do
-  @derive Jason.Encoder
   alias OcwWebpage.Model
   defstruct [:attempts, :average, :competitor]
 
