@@ -31,56 +31,40 @@ defmodule OcwWebpage.Model.Result do
         }
   def to_map(%{attempts: attempts, average: average, competitor: competitor}) do
     %{
-      attempts: Enum.map(attempts, &convert_to_tournament_time_format/1),
-      best_solve: Enum.min(attempts) |> convert_to_tournament_time_format(),
-      average: average |> convert_to_tournament_time_format(),
+      attempts: Enum.map(attempts, &format_time/1),
+      best_solve: Enum.min(attempts) |> format_time(),
+      average: average |> format_time(),
       competitor: Model.Person.to_map(competitor)
     }
   end
 
-  defp convert_to_tournament_time_format(centiseconds) when centiseconds / 100 < 10 do
-    "00:0#{float_to_binary(centiseconds)}"
+  @spec format_time(integer) :: String.t()
+  def format_time(centiseconds) do
+    "#{minutes(centiseconds)}:#{seconds(centiseconds)}.#{remains(centiseconds)}"
   end
 
-  defp convert_to_tournament_time_format(centiseconds)
-       when centiseconds / 100 >= 10 and centiseconds / 100 < 60 do
-    "00:#{float_to_binary(centiseconds)}"
+  defp minutes(centiseconds) do
+    div(centiseconds, 100)
+    |> div(60)
+    |> add_zero_if_needed()
   end
 
-  defp convert_to_tournament_time_format(centiseconds)
-       when centiseconds / 100 >= 60 and centiseconds / 100 < 600 do
-    {minutes, remaining_centiseconds} = to_minutes_and_seconds(centiseconds)
-
-    case remaining_centiseconds / 100 < 10 do
-      true ->
-        "0#{minutes}:0#{float_to_binary(remaining_centiseconds)}"
-
-      false ->
-        "0#{minutes}:#{float_to_binary(remaining_centiseconds)}"
-    end
+  defp seconds(centiseconds) do
+    div(centiseconds, 100)
+    |> discard_full_minutes()
+    |> add_zero_if_needed()
   end
 
-  defp convert_to_tournament_time_format(centiseconds)
-       when centiseconds / 100 >= 600 and centiseconds / 100 < 3600 do
-    {minutes, remaining_centiseconds} = to_minutes_and_seconds(centiseconds)
-
-    case remaining_centiseconds / 100 < 10 do
-      true ->
-        "#{minutes}:0#{float_to_binary(remaining_centiseconds)}"
-
-      false ->
-        "#{minutes}:#{float_to_binary(remaining_centiseconds)}"
-    end
+  defp remains(centiseconds) do
+    rem(centiseconds, 100)
+    |> add_zero_if_needed()
   end
 
-  defp to_minutes_and_seconds(centiseconds) do
-    minutes =
-      centiseconds
-      |> div(100)
-      |> div(60)
+  defp discard_full_minutes(time) when time >= 60, do: time - div(time, 60) * 60
+  defp discard_full_minutes(time), do: time
 
-    {minutes, centiseconds - minutes * 60 * 100}
-  end
+  defp add_zero_if_needed(time) when time < 10, do: "0#{time}"
+  defp add_zero_if_needed(time), do: "#{time}"
 
   # defp calculate_average(attempts) do
   #   case Enum.count(attempts) < 5 do
@@ -93,6 +77,4 @@ defmodule OcwWebpage.Model.Result do
   #       Enum.reduce(remaining_attempts, fn x, acc -> x + acc end) / Enum.count(remaining_attempts)
   #   end
   # end
-
-  defp float_to_binary(centiseconds), do: :erlang.float_to_binary(centiseconds / 100, decimals: 2)
 end
