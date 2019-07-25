@@ -68,58 +68,9 @@ defmodule OcwWebpageWeb.TournamentLive do
            }
          } = socket
        ) do
-    round = Services.Tournaments.fetch_round(tournament_name, event_name, round_name)
-    records = stub_records()
-    event_with_rounds = Services.Tournaments.fetch_event_with_rounds(tournament_name)
-
     socket
-    |> assign(:round, round)
-    |> assign(:records, records)
-    |> assign(:event_with_rounds, event_with_rounds)
-  end
-
-  defp stub_records() do
-    %{
-      wr: %{
-        single: %{
-          person: "Rafał Studnicki",
-          time: "00:05.70"
-        },
-        average: %{
-          person: "Rafał Studnicki",
-          time: "00:04.70"
-        }
-      },
-      cr: %{
-        single: %{
-          person: "Rafał Studnicki",
-          time: "00:05.70"
-        },
-        average: %{
-          person: "Rafał Studnicki",
-          time: "00:05.70"
-        }
-      },
-      nr: %{
-        single: %{
-          person: "Rafał Studnicki",
-          time: "00:05.70"
-        },
-        average: %{
-          person: "Rafał Studnicki",
-          time: "00:05.70"
-        }
-      },
-      cb: %{
-        single: %{
-          person: "Rafał Studnicki",
-          time: "00:05.70"
-        },
-        average: %{
-          person: "Rafał Studnicki",
-          time: "00:05.70"
-        }
-      }
-    }
+    |> assign(:round, Services.Tournaments.fetch_round(tournament_name, event_name, round_name))
+    |> assign(:records, DataAccess.Stubs.records())
+    |> assign(:event_with_rounds, Services.Tournaments.fetch_event_with_rounds(tournament_name))
   end
 end
