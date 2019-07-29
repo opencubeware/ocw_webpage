@@ -53,13 +53,13 @@ defmodule OcwWebpage.Model.PersonTest do
       }
 
       assert %{
-               first_name: first_name,
-               last_name: last_name,
-               wca_id: wca_id,
+               first_name: ^first_name,
+               last_name: ^last_name,
+               wca_id: ^wca_id,
                country: %{
-                 continent_name: continent_name,
-                 name: country_name,
-                 iso2: country_iso2
+                 continent_name: ^continent_name,
+                 name: ^country_name,
+                 iso2: ^country_iso2
                }
              } = Person.to_map(struct)
     end

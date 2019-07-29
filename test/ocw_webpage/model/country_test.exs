@@ -21,7 +21,11 @@ defmodule OcwWebpage.Model.CountryTest do
       iso2 = "pl"
       struct = %Country{name: name, continent_name: continent_name, iso2: iso2}
 
-      assert %{name: ^name, continent_name: ^continent_name, iso2: ^iso2} = Country.to_map(struct)
+      assert %{
+               name: ^name,
+               continent_name: ^continent_name,
+               iso2: ^iso2
+             } = Country.to_map(struct)
     end
   end
 end
