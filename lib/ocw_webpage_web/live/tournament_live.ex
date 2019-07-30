@@ -73,10 +73,17 @@ defmodule OcwWebpageWeb.TournamentLive do
          } = socket
        ) do
     case Services.Tournaments.fetch_round(tournament_name, event_name, round_name) do
-      {:ok, round} -> assign(socket, :round, round)
-      {:error, status} -> assign(socket, :error, status)
+      {:ok, round} ->
+        socket
+        |> assign(:round, round)
+        |> assign(:records, DataAccess.Stubs.records())
+        |> assign(
+          :event_with_rounds,
+          Services.Tournaments.fetch_event_with_rounds(tournament_name)
+        )
+
+      {:error, status} ->
+        assign(socket, :error, status)
     end
-    |> assign(:records, DataAccess.Stubs.records())
-    |> assign(:event_with_rounds, Services.Tournaments.fetch_event_with_rounds(tournament_name))
   end
 end
