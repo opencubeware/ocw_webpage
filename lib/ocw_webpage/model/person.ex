@@ -31,5 +31,17 @@ defmodule OcwWebpage.Model.Person do
   end
 
   @spec to_map(t()) :: map()
-  def to_map(%__MODULE__{} = struct), do: Map.from_struct(struct)
+  def to_map(%__MODULE__{
+        first_name: first_name,
+        last_name: last_name,
+        wca_id: wca_id,
+        country: country
+      }) do
+    %{
+      first_name: first_name,
+      last_name: last_name,
+      wca_id: wca_id,
+      country: Model.Country.to_map(country)
+    }
+  end
 end
