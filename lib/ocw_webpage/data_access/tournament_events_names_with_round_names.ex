@@ -10,7 +10,7 @@ defmodule OcwWebpage.DataAccess.TournamentEventsNamesWithRoundNames do
     |> Repo.all()
     |> FE.Result.ok()
     |> FE.Result.map(fn [tournament] -> tournament end)
-    |> FE.Result.and_then(&Model.EventsNamesWithRoundNames.new/1)
+    |> FE.Result.map(&Model.EventsNamesWithRoundNames.new/1)
   end
 
   defp event_with_rounds(tournament_name) do

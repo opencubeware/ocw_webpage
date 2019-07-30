@@ -1,5 +1,6 @@
 defmodule OcwWebpage.DataAccess.Round do
   import Ecto.Query, only: [from: 2]
+  alias FE.Result
   alias OcwWebpage.DataAccess.Schemas
   alias OcwWebpage.Repo
   alias OcwWebpage.Constants
@@ -27,9 +28,9 @@ defmodule OcwWebpage.DataAccess.Round do
   def fetch(tournament_name, event_name, round_name) do
     full_round_query(tournament_name, event_name, round_name)
     |> Repo.all()
-    |> FE.Result.ok()
-    |> FE.Result.map(fn [round] -> round end)
-    |> FE.Result.and_then(&Model.Round.new/1)
+    |> Result.ok()
+    |> Result.map(fn [round] -> round end)
+    |> Result.map(&Model.Round.new/1)
   end
 
   defp full_round_query(tournament_name, event_name, round_name) do

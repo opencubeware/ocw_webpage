@@ -22,28 +22,27 @@ defmodule OcwWebpage.Model.RoundTest do
       round_name = %{name: name}
       event = %{event_name: %{name: event_name}, tournament: %{name: tournament_name}}
 
-      assert {:ok,
-              %Round{
-                event_name: ^event_name,
-                name: ^name,
-                tournament_name: ^tournament_name,
-                results: [
-                  %Result{
-                    attempts: ^attempts,
-                    average: ^average,
-                    competitor: %Person{
-                      first_name: ^first_name,
-                      last_name: ^last_name,
-                      wca_id: ^wca_id,
-                      country: %Country{
-                        continent_name: ^continent_name,
-                        name: ^country_name,
-                        iso2: ^country_iso2
-                      }
-                    }
-                  }
-                ]
-              }} =
+      assert %Round{
+               event_name: ^event_name,
+               name: ^name,
+               tournament_name: ^tournament_name,
+               results: [
+                 %Result{
+                   attempts: ^attempts,
+                   average: ^average,
+                   competitor: %Person{
+                     first_name: ^first_name,
+                     last_name: ^last_name,
+                     wca_id: ^wca_id,
+                     country: %Country{
+                       continent_name: ^continent_name,
+                       name: ^country_name,
+                       iso2: ^country_iso2
+                     }
+                   }
+                 }
+               ]
+             } =
                Round.new(%{
                  event: event,
                  round_name: round_name,

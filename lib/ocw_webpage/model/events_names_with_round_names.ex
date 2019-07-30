@@ -10,9 +10,9 @@ defmodule OcwWebpage.Model.EventsNamesWithRoundNames do
           ]
         }
 
-  @spec new(%{events: [map()]}) :: FE.Result.t(t())
+  @spec new(%{events: [map()]}) :: t()
   def new(%{events: events}) do
-    {:ok, struct(__MODULE__, %{events: events_names_with_rounds_names(events)})}
+    struct(__MODULE__, %{events: events_names_with_rounds_names(events)})
   end
 
   @spec to_map(t()) :: map()

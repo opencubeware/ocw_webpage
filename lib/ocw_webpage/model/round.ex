@@ -1,6 +1,5 @@
 defmodule OcwWebpage.Model.Round do
   alias OcwWebpage.Model
-  alias FE.Result
   defstruct [:event_name, :name, :results, :tournament_name]
 
   @type t :: %__MODULE__{
@@ -14,20 +13,18 @@ defmodule OcwWebpage.Model.Round do
           event: %{event_name: %{name: String.t()}, tournament: %{name: String.t()}},
           results: map(),
           round_name: %{name: String.t()}
-        }) :: FE.Result.t(t(), String.t())
+        }) :: t()
   def new(%{
         event: %{event_name: %{name: event_name}, tournament: %{name: tournament_name}},
         round_name: %{name: round_name},
         results: results
       }) do
-    Result.ok(
-      struct(__MODULE__, %{
-        event_name: event_name,
-        name: round_name,
-        tournament_name: tournament_name,
-        results: Enum.map(results, &Model.Result.new/1)
-      })
-    )
+    struct(__MODULE__, %{
+      event_name: event_name,
+      name: round_name,
+      tournament_name: tournament_name,
+      results: Enum.map(results, &Model.Result.new/1)
+    })
   end
 
   @spec to_map(t()) :: %{
