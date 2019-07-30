@@ -1,5 +1,6 @@
 defmodule OcwWebpage.Model.Round do
   alias OcwWebpage.Model
+  alias FE.Result
   defstruct [:event_name, :name, :results, :tournament_name]
 
   @type t :: %__MODULE__{
@@ -19,7 +20,7 @@ defmodule OcwWebpage.Model.Round do
         round_name: %{name: round_name},
         results: results
       }) do
-    FE.Result.ok(
+    Result.ok(
       struct(__MODULE__, %{
         event_name: event_name,
         name: round_name,
