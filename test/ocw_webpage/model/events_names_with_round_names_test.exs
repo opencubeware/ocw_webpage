@@ -6,7 +6,6 @@ defmodule OcwWebpage.Model.EventsNamesWithRoundNamesTest do
     test "returns EventsNamesWithRoundNames.t()" do
       event_name = "3x3x3"
       name = "First Round"
-      round_name = %{name: name}
 
       events = [
         %{
