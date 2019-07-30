@@ -28,8 +28,7 @@ defmodule OcwWebpage.DataAccess.Round do
   def fetch(tournament_name, event_name, round_name) do
     full_round_query(tournament_name, event_name, round_name)
     |> Repo.all()
-    |> Result.ok()
-    |> Result.map(fn [round] -> round end)
+    |> empty_or_not()
     |> Result.map(&Model.Round.new/1)
   end
 
@@ -50,5 +49,12 @@ defmodule OcwWebpage.DataAccess.Round do
         results: [person: [country: [:continent]]]
       ]
     )
+  end
+
+  defp empty_or_not(rounds) do
+    case rounds do
+      [] -> {:error, 404}
+      [round] -> {:ok, round}
+    end
   end
 end

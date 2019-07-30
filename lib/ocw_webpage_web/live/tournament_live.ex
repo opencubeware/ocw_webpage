@@ -5,27 +5,31 @@ defmodule OcwWebpageWeb.TournamentLive do
 
   def render(assigns) do
     ~L"""
-    <div class="tournament-show-page">
-      <div class="row header">
-        OCW &lt; back to website
-      </div>
-      <div class="row body">
-        <div class="col s9 board">
-          <%= OcwWebpageWeb.PageView.render("main_board_top.html", assigns) %>
-          <%= OcwWebpageWeb.PageView.render("main_board_records.html", assigns.records) %>
-          <%= OcwWebpageWeb.PageView.render("main_board_table.html", assigns.round) %>
+    <%= unless Map.has_key?(assigns, :error) do %>
+      <div class="tournament-show-page">
+        <div class="row header">
+          OCW &lt; back to website
         </div>
-        <div class="col s3 sidebar">
-          %{tournamentName && (
-            <MainSidebarCard name=%{tournamentName} />
-          )}
-          %{eventsNamesWithRoundNames && (
-            <MainSidebarList tournamentName=%{tournamentName} data=%{eventsNamesWithRoundNames}/>
-          )}
+        <div class="row body">
+          <div class="col s9 board">
+            <%= OcwWebpageWeb.PageView.render("main_board_top.html", assigns) %>
+            <%= OcwWebpageWeb.PageView.render("main_board_records.html", assigns.records) %>
+            <%= OcwWebpageWeb.PageView.render("main_board_table.html", assigns.round) %>
+          </div>
+          <div class="col s3 sidebar">
+            %{tournamentName && (
+              <MainSidebarCard name=%{tournamentName} />
+            )}
+            %{eventsNamesWithRoundNames && (
+              <MainSidebarList tournamentName=%{tournamentName} data=%{eventsNamesWithRoundNames}/>
+            )}
+          </div>
         </div>
+        <a class="waves-effect waves-light btn" phx-click="random">Random number</a>
       </div>
-      <a class="waves-effect waves-light btn" phx-click="random">Random number</a>
-    </div>
+    <% else %>
+      <%= assigns.error %>
+    <% end %>
     """
   end
 
@@ -68,8 +72,10 @@ defmodule OcwWebpageWeb.TournamentLive do
            }
          } = socket
        ) do
-    socket
-    |> assign(:round, Services.Tournaments.fetch_round(tournament_name, event_name, round_name))
+    case Services.Tournaments.fetch_round(tournament_name, event_name, round_name) do
+      {:ok, round} -> assign(socket, :round, round)
+      {:error, status} -> assign(socket, :error, status)
+    end
     |> assign(:records, DataAccess.Stubs.records())
     |> assign(:event_with_rounds, Services.Tournaments.fetch_event_with_rounds(tournament_name))
   end

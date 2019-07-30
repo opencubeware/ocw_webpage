@@ -16,7 +16,7 @@ defmodule OcwWebpage.Services.TournamentsTest do
   }
 
   describe "fetch_round/3" do
-    test "fetches everything correctly" do
+    setup do
       tournament_name = "Cracow Open 2013"
       event_name = "3x3x3"
       round_name = "First Round"
@@ -42,28 +42,52 @@ defmodule OcwWebpage.Services.TournamentsTest do
         competitor_id: person.id
       })
 
-      assert %{
-               event_name: "3x3x3",
-               name: "First Round",
-               results: [
-                 %{
-                   attempts: ["00:05.10", "00:06.20", "00:07.30", "00:05.80", "00:07.40"],
-                   average: "00:06.36",
-                   best_solve: "00:05.10",
-                   competitor: %{
-                     country: %{
-                       continent_name: "Europe",
-                       iso2: "gb",
-                       name: "United Kingdom"
-                     },
-                     first_name: "John",
-                     last_name: "Doe",
-                     wca_id: "2018dupa"
-                   }
-                 }
-               ],
-               tournament_name: "Cracow Open 2013"
-             } = Services.Tournaments.fetch_round(tournament_name, event_name, round_name)
+      %{tournament_name: tournament_name, event_name: event_name, round_name: round_name}
+    end
+
+    test "fetches everything correctly", %{
+      tournament_name: tournament_name,
+      event_name: event_name,
+      round_name: round_name
+    } do
+      assert {:ok,
+              %{
+                event_name: "3x3x3",
+                name: "First Round",
+                results: [
+                  %{
+                    attempts: ["00:05.10", "00:06.20", "00:07.30", "00:05.80", "00:07.40"],
+                    average: "00:06.36",
+                    best_solve: "00:05.10",
+                    competitor: %{
+                      country: %{
+                        continent_name: "Europe",
+                        iso2: "gb",
+                        name: "United Kingdom"
+                      },
+                      first_name: "John",
+                      last_name: "Doe",
+                      wca_id: "2018dupa"
+                    }
+                  }
+                ],
+                tournament_name: "Cracow Open 2013"
+              }} = Services.Tournaments.fetch_round(tournament_name, event_name, round_name)
+    end
+
+    test "returns error when not found", %{
+      tournament_name: tournament_name,
+      event_name: event_name,
+      round_name: round_name
+    } do
+      assert {:error, 404} =
+               Services.Tournaments.fetch_round(tournament_name, event_name, "wrong_round")
+
+      assert {:error, 404} =
+               Services.Tournaments.fetch_round(tournament_name, "wrong_event", round_name)
+
+      assert {:error, 404} =
+               Services.Tournaments.fetch_round("wrong_tournament", event_name, round_name)
     end
   end
 
