@@ -48,10 +48,9 @@ defmodule OcwWebpage.Model.ResultTest do
       wca_id = "2009wcaid"
       attempts = [730, 700, 840, 690, 700]
       average = 720
-      best_solve = Enum.min(attempts)
-      attempts_translated = Enum.map(attempts, &Result.format_time(&1))
-      average_translated = Result.format_time(average)
-      best_solve_translated = Result.format_time(best_solve)
+      attempts_translated = ["00:07.30", "00:07.00", "00:08.40", "00:06.90", "00:07.00"]
+      average_translated = "00:07.20"
+      best_solve_translated = "00:06.90"
 
       struct = %Result{
         attempts: attempts,
