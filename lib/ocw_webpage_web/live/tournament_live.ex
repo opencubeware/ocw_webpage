@@ -8,7 +8,7 @@ defmodule OcwWebpageWeb.TournamentLive do
     <%= unless Map.has_key?(assigns, :error) do %>
       <div class="tournament-show-page">
         <div class="row header">
-          OCW &lt; back to website
+          <div class="col s12">OCW &lt; back to website</div>
         </div>
         <div class="row body">
           <div class="col s9 board">

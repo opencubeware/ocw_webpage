@@ -1,9 +1,11 @@
 .tournament-show-page {
   .header {
+    padding-left: 1rem;
     color: white;
     background-color: $color-blue-dark;
   }
   .body {
+    padding-left: 2rem;
     .board {
       &--top {
         text-align: center;
@@ -55,10 +57,7 @@
             table-layout: fixed;
             thead {
               tr {
-                background: linear-gradient(
-                  $color-blue-light,
-                  $color-blue-dark
-                );
+                background: linear-gradient($color-blue-light, $color-blue-dark);
                 color: white;
                 th:first-child {
                   width: 30px;
