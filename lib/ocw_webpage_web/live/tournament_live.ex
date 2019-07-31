@@ -17,12 +17,8 @@ defmodule OcwWebpageWeb.TournamentLive do
             <%= OcwWebpageWeb.PageView.render("main_board_table.html", assigns.round) %>
           </div>
           <div class="col s3 sidebar">
-            %{tournamentName && (
-              <MainSidebarCard name=%{tournamentName} />
-            )}
-            %{eventsNamesWithRoundNames && (
-              <MainSidebarList tournamentName=%{tournamentName} data=%{eventsNamesWithRoundNames}/>
-            )}
+            <%= OcwWebpageWeb.PageView.render("main_sidebar_card.html", assigns.round) %>
+            <%= OcwWebpageWeb.PageView.render("main_sidebar_list.html", assigns) %>
           </div>
         </div>
         <a class="waves-effect waves-light btn" phx-click="random">Random number</a>
