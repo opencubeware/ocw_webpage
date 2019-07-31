@@ -131,12 +131,14 @@
         }
         .collapsible-header {
           background: linear-gradient($color-blue-light, $color-blue-dark);
+          text-align: center;
           &:hover {
             background: linear-gradient($color-blue-dark, $color-blue-darker);
           }
         }
         .collapsible-body {
           .collection {
+            text-align: center;
             color: black;
           }
           li.collection-item {
