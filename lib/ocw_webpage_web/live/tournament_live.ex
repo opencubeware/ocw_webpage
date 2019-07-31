@@ -54,6 +54,16 @@ defmodule OcwWebpageWeb.TournamentLive do
     {:noreply, fetch_all(socket)}
   end
 
+  def handle_params(params, _url, socket) do
+    new_socket =
+      socket
+      |> assign(:tournament_name, URI.decode(params["tournament_name"]))
+      |> assign(:event_name, URI.decode(params["event_name"]))
+      |> assign(:round_name, URI.decode(params["round_name"]))
+
+    {:noreply, fetch_all(new_socket)}
+  end
+
   def handle_event("random", _params, socket) do
     DataAccess.Round.update_testing()
     {:noreply, socket}

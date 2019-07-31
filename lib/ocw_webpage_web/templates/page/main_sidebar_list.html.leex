@@ -10,9 +10,9 @@
                 to: Routes.live_path(
                   @socket,
                   OcwWebpageWeb.TournamentLive,
-                  "Cracow Open 2013",
-                  "2x2x2",
-                  "First Round"
+                  @tournament_name,
+                  event.name,
+                  round_name
                 ),
                 class: "collection-item")
               %>
