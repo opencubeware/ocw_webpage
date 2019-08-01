@@ -14,7 +14,7 @@ defmodule OcwWebpageWeb.TournamentLive do
           <div class="col s9 board">
             <%= OcwWebpageWeb.PageView.render("main_board_top.html", assigns) %>
             <%= OcwWebpageWeb.PageView.render("main_board_records.html", assigns.records) %>
-            <%= OcwWebpageWeb.PageView.render("main_board_table.html", assigns.round) %>
+            <%= OcwWebpageWeb.PageView.render("main_board_table.html", assigns) %>
           </div>
           <div class="col s3 sidebar">
             <%= OcwWebpageWeb.PageView.render("main_sidebar_card.html", assigns.round) %>
@@ -81,6 +81,7 @@ defmodule OcwWebpageWeb.TournamentLive do
     case Services.Tournaments.fetch_round(tournament_name, event_name, round_name) do
       {:ok, round} ->
         socket
+        |> assign(:test, Enum.random(["dupa", "flash-toggle"]))
         |> assign(:round, round)
         |> assign(:records, DataAccess.Stubs.records())
         |> assign(

@@ -16,8 +16,8 @@
         </tr>
       </thead>
       <tbody>
-        <%= for {result, index} <- Enum.with_index(@results) do %>
-          <tr key="<%= index %>">
+        <%= for {result, index} <- Enum.with_index(@round.results) do %>
+          <tr key="<%= index %>" class="<%= @test %>">
             <td key="<%= index %>">
               <%= index + 1 %>
             </td>
@@ -28,7 +28,7 @@
               <img src="/images/flags/<%= result.competitor.country.iso2 %>.svg"/>
             </td>
             <%= for attempt <- result.attempts do %>
-            <td><%= attempt %></td>
+              <td class="<%= @test %>"><%= attempt %></td>
             <% end %>
             <td><%= result.best_solve %></td>
             <td><%= result.average %></td>
