@@ -77,16 +77,16 @@
               }
             }
             tbody {
+              @keyframes blinker {
+                50% {
+                  opacity: 0;
+                }
+              }
+              tr.flash-toggle {
+                animation: blinker 1s linear;
+                animation-iteration-count: 2;
+              }
               tr {
-                @keyframes blinker {
-                  50% {
-                    opacity: 0;
-                  }
-                }
-                td.flash-toggle {
-                  animation: blinker 1s linear;
-                  animation-iteration-count: 2;
-                }
                 td {
                   border-radius: 0 !important;
                   padding: 5px 5px !important;

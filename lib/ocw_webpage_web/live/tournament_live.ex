@@ -1,7 +1,7 @@
 defmodule OcwWebpageWeb.TournamentLive do
   use Phoenix.LiveView
-  alias OcwWebpage.Services
-  alias OcwWebpage.DataAccess
+  require Ecto.Query
+  alias OcwWebpage.{DataAccess, Model, Services}
 
   def render(assigns) do
     ~L"""
@@ -65,8 +65,20 @@ defmodule OcwWebpageWeb.TournamentLive do
   end
 
   def handle_event("random", _params, socket) do
-    DataAccess.Round.update_testing()
-    {:noreply, socket}
+    {:ok, result} = DataAccess.Round.update_testing()
+    db_result = OcwWebpage.Repo.preload(result, :round)
+    db_result_round_id = db_result.round.id
+
+    index =
+      Ecto.Query.from(r in DataAccess.Schemas.Result,
+        where: r.round_id == ^db_result_round_id,
+        preload: :round
+      )
+      |> OcwWebpage.Repo.all()
+      |> Enum.sort_by(fn map -> {map.average, Enum.min(map.attempts)} end)
+      |> Enum.find_index(fn x -> x == db_result end)
+
+    {:noreply, socket |> assign(:index, index)}
   end
 
   defp fetch_all(
@@ -81,7 +93,6 @@ defmodule OcwWebpageWeb.TournamentLive do
     case Services.Tournaments.fetch_round(tournament_name, event_name, round_name) do
       {:ok, round} ->
         socket
-        |> assign(:test, Enum.random(["dupa", "flash-toggle"]))
         |> assign(:round, round)
         |> assign(:records, DataAccess.Stubs.records())
         |> assign(
