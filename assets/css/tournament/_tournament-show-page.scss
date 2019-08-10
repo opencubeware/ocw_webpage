@@ -77,6 +77,14 @@
               }
             }
             tbody {
+              @keyframes blinker {
+                0% { background-color: yellow; }
+                99% { background-color: yellow; }
+                100% { background-color: white; }
+              }
+              tr.flash-toggle {
+                animation: blinker 2s linear;
+              }
               tr {
                 td {
                   border-radius: 0 !important;

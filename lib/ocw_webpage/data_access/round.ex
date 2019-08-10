@@ -13,7 +13,7 @@ defmodule OcwWebpage.DataAccess.Round do
   end
 
   def update_testing() do
-    OcwWebpage.Repo.get(OcwWebpage.DataAccess.Schemas.Result, 1)
+    OcwWebpage.Repo.get(OcwWebpage.DataAccess.Schemas.Result, Enum.random([1, 2, 3]))
     |> Ecto.Changeset.change(%{attempts: for(_ <- 1..5, do: Enum.random(100..800))})
     |> OcwWebpage.Repo.update()
     |> broadcast_change([:round, :updated])

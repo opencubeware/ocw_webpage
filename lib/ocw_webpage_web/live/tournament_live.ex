@@ -1,7 +1,7 @@
 defmodule OcwWebpageWeb.TournamentLive do
   use Phoenix.LiveView
-  alias OcwWebpage.Services
-  alias OcwWebpage.DataAccess
+  require Ecto.Query
+  alias OcwWebpage.{DataAccess, Model, Services}
 
   def render(assigns) do
     ~L"""
@@ -14,7 +14,7 @@ defmodule OcwWebpageWeb.TournamentLive do
           <div class="col s9 board">
             <%= OcwWebpageWeb.PageView.render("main_board_top.html", assigns) %>
             <%= OcwWebpageWeb.PageView.render("main_board_records.html", assigns.records) %>
-            <%= OcwWebpageWeb.PageView.render("main_board_table.html", assigns.round) %>
+            <%= OcwWebpageWeb.PageView.render("main_board_table.html", assigns) %>
           </div>
           <div class="col s3 sidebar">
             <%= OcwWebpageWeb.PageView.render("main_sidebar_card.html", assigns.round) %>
@@ -65,8 +65,20 @@ defmodule OcwWebpageWeb.TournamentLive do
   end
 
   def handle_event("random", _params, socket) do
-    DataAccess.Round.update_testing()
-    {:noreply, socket}
+    {:ok, result} = DataAccess.Round.update_testing()
+    db_result = OcwWebpage.Repo.preload(result, :round)
+    db_result_round_id = db_result.round.id
+
+    index =
+      Ecto.Query.from(r in DataAccess.Schemas.Result,
+        where: r.round_id == ^db_result_round_id,
+        preload: :round
+      )
+      |> OcwWebpage.Repo.all()
+      |> Enum.sort_by(fn map -> {map.average, Enum.min(map.attempts)} end)
+      |> Enum.find_index(fn x -> x == db_result end)
+
+    {:noreply, socket |> assign(:index, index)}
   end
 
   defp fetch_all(
