@@ -38,7 +38,9 @@ defmodule OcwWebpage.Model.Result do
     }
   end
 
-  @spec format_time(integer) :: String.t()
+  @spec format_time(integer | nil) :: String.t()
+  def format_time(nil), do: ""
+
   def format_time(centiseconds) do
     "#{minutes(centiseconds)}:#{seconds(centiseconds)}.#{remains(centiseconds)}"
   end
@@ -66,15 +68,22 @@ defmodule OcwWebpage.Model.Result do
   defp add_zero_if_needed(time) when time < 10, do: "0#{time}"
   defp add_zero_if_needed(time), do: "#{time}"
 
-  # defp calculate_average(attempts) do
-  #   case Enum.count(attempts) < 5 do
-  #     true ->
-  #       nil
+  @spec calculate_average(t()) :: t()
+  def calculate_average(%__MODULE__{attempts: attempts} = model) when length(attempts) >= 3 do
+    remaining_attempts =
+      Enum.min_max(attempts)
+      |> filter_min_max(attempts)
 
-  #     false ->
-  #       {min, max} = Enum.min_max(attempts)
-  #       remaining_attempts = Enum.filter(attempts, fn x -> x != min and x != max end)
-  #       Enum.reduce(remaining_attempts, fn x, acc -> x + acc end) / Enum.count(remaining_attempts)
-  #   end
-  # end
+    average =
+      Enum.sum(remaining_attempts)
+      |> div(length(remaining_attempts))
+
+    %__MODULE__{model | average: average}
+  end
+
+  def calculate_average(model), do: model
+
+  defp filter_min_max({min, max}, attempts) do
+    Enum.filter(attempts, fn x -> x != min and x != max end)
+  end
 end

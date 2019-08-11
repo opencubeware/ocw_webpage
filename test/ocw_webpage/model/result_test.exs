@@ -106,4 +106,60 @@ defmodule OcwWebpage.Model.ResultTest do
       assert "60:00.01" == Result.format_time(360_001)
     end
   end
+
+  describe "calculate_average/1" do
+    setup do
+      continent_name = "Europe"
+      country_name = "Poland"
+      country_iso2 = "pl"
+      first_name = "John"
+      last_name = "Doe"
+      wca_id = "2009wcaid"
+      attempts = [730, 700, 840, 690, 700]
+
+      %{
+        struct: %Result{
+          attempts: attempts,
+          average: nil,
+          competitor: %Person{
+            first_name: first_name,
+            last_name: last_name,
+            wca_id: wca_id,
+            country: %Country{
+              continent_name: continent_name,
+              name: country_name,
+              iso2: country_iso2
+            }
+          }
+        }
+      }
+    end
+
+    test "return nil when there is less than 3 attempts", %{struct: struct} do
+      attempts_1 = [590]
+      struct = %Result{struct | attempts: attempts_1}
+      assert %Result{average: nil} = Result.calculate_average(struct)
+
+      attempts_2 = [590, 690]
+      struct = %Result{struct | attempts: attempts_2}
+      assert %Result{average: nil} = Result.calculate_average(struct)
+    end
+
+    test "calculates average when there is more than 3 attempts", %{struct: struct} do
+      attempts = [380, 390, 400]
+      struct = %Result{struct | attempts: attempts}
+
+      assert %Result{average: 390} = Result.calculate_average(struct)
+    end
+
+    test "removes best and worst time when there is more than 3 attempts", %{struct: struct} do
+      attempts_1 = [530, 590, 680, 590]
+      struct = %Result{struct | attempts: attempts_1}
+      assert %Result{average: 590} = Result.calculate_average(struct)
+
+      attempts_2 = [530, 590, 600, 580, 680]
+      struct = %Result{struct | attempts: attempts_2}
+      assert %Result{average: 590} = Result.calculate_average(struct)
+    end
+  end
 end
