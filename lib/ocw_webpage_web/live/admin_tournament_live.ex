@@ -14,9 +14,9 @@ defmodule OcwWebpageWeb.AdminTournamentLive do
             <div class="col s12 search-box__title">
               Search
             </div>
-            <div class="col s12 search-box__input">
+            <div class="col s6 search-box__input">
               <form phx-change="update-board">
-                <input type="text" name="q" value="<%= @query %>" placeholder="Search..."/>
+                <input type="text" name="q" value="<%= @query %>" class="input" placeholder="Search..."/>
               </form>
             </div>
           </div>

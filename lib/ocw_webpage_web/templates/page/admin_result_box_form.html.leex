@@ -8,30 +8,30 @@
     </div>
     <div class="row">
       <div class="col s12">
-        <%= Phoenix.HTML.Form.number_input :result, :first, placeholder: "First Solve..."%>
+        <%= Phoenix.HTML.Form.number_input :result, :first, class: "form-input", placeholder: "First Solve..."%>
       </div>
     </div>
     <div class="row">
       <div class="col s12">
-        <%= Phoenix.HTML.Form.number_input :result, :second, placeholder: "Second Solve..."%>
+        <%= Phoenix.HTML.Form.number_input :result, :second, class: "form-input", placeholder: "Second Solve..."%>
       </div>
     </div>
     <div class="row">
       <div class="col s12">
-        <%= Phoenix.HTML.Form.number_input :result, :third, placeholder: "Third Solve..."%>
+        <%= Phoenix.HTML.Form.number_input :result, :third, class: "form-input", placeholder: "Third Solve..."%>
       </div>
     </div>
     <div class="row">
       <div class="col s12">
-        <%= Phoenix.HTML.Form.number_input :result, :fourth, placeholder: "Fourth Solve..."%>
+        <%= Phoenix.HTML.Form.number_input :result, :fourth, class: "form-input", placeholder: "Fourth Solve..."%>
       </div>
     </div>
     <div class="row">
       <div class="col s12">
-        <%= Phoenix.HTML.Form.number_input :result, :fifth, placeholder: "Fifth Solve..."%>
+        <%= Phoenix.HTML.Form.number_input :result, :fifth, class: "form-input", placeholder: "Fifth Solve..."%>
       </div>
     </div>
     <div class="row">
-      <%= Phoenix.HTML.Form.submit "Add", phx_disable_with: "Adding..." %>
+      <%= Phoenix.HTML.Form.submit "Add", class: "form-button", phx_disable_with: "Adding..." %>
     </div>
   </form>

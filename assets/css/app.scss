@@ -9,6 +9,11 @@ body {
   font-family: $main-font;
 }
 
+.row {
+  padding: 0 !important;
+  margin-left: 0 !important;
+}
+
 .slash {
   color: $color-grey;
 }
