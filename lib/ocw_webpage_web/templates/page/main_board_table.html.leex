@@ -3,7 +3,7 @@
     <table class="striped">
       <thead>
         <tr>
-          <th>No.</th>
+          <th>Place</th>
           <th>| Competitor</th>
           <th>| Country</th>
           <th>| 1</th>
@@ -22,21 +22,22 @@
           <% else %>
             <tr key="<%= index %>">
           <% end %>
-          <td key="<%= index %>">
-            <%= index + 1 %>
-          </td>
-          <td key="<%= result.competitor.first_name %> <%= result.competitor.last_name %>">
-            <b><%= result.competitor.first_name %> <%= result.competitor.last_name %></b>
-          </td>
-          <td key="<%= result.competitor.country.name %>">
-            <img src="/images/flags/<%= result.competitor.country.iso2 %>.svg"/>
-          </td>
-          <%= for attempt <- result.attempts do %>
-            <td><%= attempt %></td>
-          <% end %>
-          <td><%= result.best_solve %></td>
-          <td><%= result.average %></td>
-          </td>
+            <td key="<%= index %>">
+              <%= index + 1 %>
+            </td>
+            <td key="<%= result.competitor.first_name %> <%= result.competitor.last_name %>">
+              <b><%= result.competitor.first_name %> <%= result.competitor.last_name %></b>
+            </td>
+            <td key="<%= result.competitor.country.name %>">
+              <img src="/images/flags/<%= result.competitor.country.iso2 %>.svg"/>
+            </td>
+            <%= for attempt <- result.attempts do %>
+              <td><%= attempt %></td>
+            <% end %>
+            <td><%= result.best_solve %></td>
+            <td><%= result.average %></td>
+            </td>
+          </tr>
         <% end %>
       </tbody>
     </table>

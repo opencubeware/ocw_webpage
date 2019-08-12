@@ -1,14 +1,16 @@
 defmodule OcwWebpage.Model.Result do
   alias OcwWebpage.Model
-  defstruct [:attempts, :average, :competitor]
+  defstruct [:id, :attempts, :average, :competitor]
 
   @type t :: %__MODULE__{
+          id: integer(),
           attempts: [integer()],
           average: integer(),
           competitor: Model.Person.t()
         }
 
   @spec new(%{
+          id: integer(),
           attempts: [integer()],
           average: integer(),
           person: %{
@@ -18,19 +20,21 @@ defmodule OcwWebpage.Model.Result do
             wca_id: String.t()
           }
         }) :: t()
-  def new(%{attempts: attempts, average: average, person: competitor}) do
+  def new(%{id: id, attempts: attempts, average: average, person: competitor}) do
     competitor = Model.Person.new(competitor)
-    struct(__MODULE__, %{attempts: attempts, average: average, competitor: competitor})
+    struct(__MODULE__, %{id: id, attempts: attempts, average: average, competitor: competitor})
   end
 
   @spec to_map(t()) :: %{
+          id: integer(),
           attempts: [String.t()],
           average: String.t(),
           best_solve: String.t(),
           competitor: map()
         }
-  def to_map(%{attempts: attempts, average: average, competitor: competitor}) do
+  def to_map(%{id: id, attempts: attempts, average: average, competitor: competitor}) do
     %{
+      id: id,
       attempts: Enum.map(attempts, &format_time/1),
       best_solve: Enum.min(attempts) |> format_time(),
       average: average |> format_time(),
@@ -86,4 +90,7 @@ defmodule OcwWebpage.Model.Result do
   defp filter_min_max({min, max}, attempts) do
     Enum.filter(attempts, fn x -> x != min and x != max end)
   end
+
+  # no dot notation to centiseconds
+  # 124354 - div(124354, 10000) * 4000
 end

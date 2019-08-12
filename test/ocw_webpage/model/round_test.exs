@@ -15,7 +15,7 @@ defmodule OcwWebpage.Model.RoundTest do
       continent = %{name: continent_name}
       country = %{continent: continent, name: country_name, iso2: country_iso2}
       person = %{country: country, first_name: first_name, last_name: last_name, wca_id: wca_id}
-      results = [%{attempts: attempts, average: average, person: person}]
+      results = [%{id: 1, attempts: attempts, average: average, person: person}]
       tournament_name = "Cracow Open 2013"
       event_name = "3x3x3"
       name = "First Round"

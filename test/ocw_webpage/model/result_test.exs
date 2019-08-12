@@ -4,6 +4,7 @@ defmodule OcwWebpage.Model.ResultTest do
 
   describe "new/3" do
     test "returns Result.t()" do
+      id = 5
       continent_name = "Europe"
       country_name = "Poland"
       country_iso2 = "pl"
@@ -17,6 +18,7 @@ defmodule OcwWebpage.Model.ResultTest do
       person = %{country: country, first_name: first_name, last_name: last_name, wca_id: wca_id}
 
       assert %Result{
+               id: ^id,
                attempts: ^attempts,
                average: ^average,
                competitor: %Person{
@@ -31,6 +33,7 @@ defmodule OcwWebpage.Model.ResultTest do
                }
              } =
                Result.new(%{
+                 id: id,
                  attempts: attempts,
                  average: average,
                  person: person

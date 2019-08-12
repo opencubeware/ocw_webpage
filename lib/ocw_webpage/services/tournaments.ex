@@ -9,10 +9,20 @@ defmodule OcwWebpage.Services.Tournaments do
     |> Result.map(&Model.Round.to_map/1)
   end
 
-  @spec fetch_event_with_rounds(String.t()) :: map()
+  def fetch_filtered_results(tournament_name, event_name, round_name, query) do
+    DataAccess.Result.fetch_filtered_by_name(tournament_name, event_name, round_name, query)
+    |> Enum.map(&Model.Result.to_map/1)
+  end
+
+  @spec fetch_event_with_rounds(String.t()) :: Result.t(map())
   def fetch_event_with_rounds(tournament_name) do
     DataAccess.TournamentEventsNamesWithRoundNames.fetch(tournament_name)
     |> Result.map(&Model.EventsNamesWithRoundNames.to_map/1)
-    |> Result.unwrap!()
+  end
+
+  @spec fetch_result(String.t()) :: Result.t(map())
+  def fetch_result(index) do
+    DataAccess.Result.get(index)
+    |> Result.map(&OcwWebpage.Model.Result.to_map/1)
   end
 end

@@ -1,0 +1,37 @@
+  <form action="#", phx-submit="edit-result">
+    <div class="row">
+      <div class="col s3">Competitor</div>
+      <div class="col s12 right">
+        <%= "#{assigns.current_result.competitor.first_name} #{assigns.current_result.competitor.last_name}" %>
+        <%= Phoenix.HTML.Form.hidden_input :result, :id, value: assigns.current_result.id %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <%= Phoenix.HTML.Form.number_input :result, :first, placeholder: "First Solve..."%>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <%= Phoenix.HTML.Form.number_input :result, :second, placeholder: "Second Solve..."%>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <%= Phoenix.HTML.Form.number_input :result, :third, placeholder: "Third Solve..."%>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <%= Phoenix.HTML.Form.number_input :result, :fourth, placeholder: "Fourth Solve..."%>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <%= Phoenix.HTML.Form.number_input :result, :fifth, placeholder: "Fifth Solve..."%>
+      </div>
+    </div>
+    <div class="row">
+      <%= Phoenix.HTML.Form.submit "Add", phx_disable_with: "Adding..." %>
+    </div>
+  </form>

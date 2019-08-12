@@ -8,8 +8,7 @@ defmodule OcwWebpage.DataAccess.TournamentEventsNamesWithRoundNames do
   def fetch(tournament_name) do
     event_with_rounds(tournament_name)
     |> Repo.all()
-    |> FE.Result.ok()
-    |> FE.Result.map(fn [tournament] -> tournament end)
+    |> empty_or_not()
     |> FE.Result.map(&Model.EventsNamesWithRoundNames.new/1)
   end
 
@@ -18,5 +17,12 @@ defmodule OcwWebpage.DataAccess.TournamentEventsNamesWithRoundNames do
       where: t.name == ^tournament_name,
       preload: [events: [event_name: [], rounds: [:round_name]]]
     )
+  end
+
+  defp empty_or_not(tournaments) do
+    case tournaments do
+      [] -> {:error, 404}
+      [tournaments] -> {:ok, tournaments}
+    end
   end
 end
