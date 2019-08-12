@@ -91,6 +91,22 @@ defmodule OcwWebpage.Model.Result do
     Enum.filter(attempts, fn x -> x != min and x != max end)
   end
 
+  @spec update_attempts(__MODULE__.t(), list(integer)) :: __MODULE__.t() | {:error, :not_an_array}
+  def update_attempts(model, attempts) when is_list(attempts) do
+    updated_attempts =
+      model
+      |> Map.get(:attempts)
+      |> Enum.zip(attempts)
+      |> Enum.map(&change_requested/1)
+
+    %__MODULE__{model | attempts: updated_attempts}
+  end
+
+  def update_attempts(_model, _attempts), do: {:error, :not_an_array}
+
+  defp change_requested({x, y}) when y == :no_change, do: x
+  defp change_requested({_x, y}), do: y
+
   # no dot notation to centiseconds
   # 124354 - div(124354, 10000) * 4000
 end

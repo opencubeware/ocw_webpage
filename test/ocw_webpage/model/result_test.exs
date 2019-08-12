@@ -165,4 +165,51 @@ defmodule OcwWebpage.Model.ResultTest do
       assert %Result{average: 590} = Result.calculate_average(struct)
     end
   end
+
+  describe "update_attempts/2" do
+    setup do
+      continent_name = "Europe"
+      country_name = "Poland"
+      country_iso2 = "pl"
+      first_name = "John"
+      last_name = "Doe"
+      wca_id = "2009wcaid"
+      attempts = [730, 700, 840, 690, 700]
+
+      %{
+        struct: %Result{
+          attempts: attempts,
+          average: nil,
+          competitor: %Person{
+            first_name: first_name,
+            last_name: last_name,
+            wca_id: wca_id,
+            country: %Country{
+              continent_name: continent_name,
+              name: country_name,
+              iso2: country_iso2
+            }
+          }
+        }
+      }
+    end
+
+    test "returns error if attempts is not an array", %{struct: struct} do
+      attempts = "not an array"
+      assert {:error, :not_an_array} == Result.update_attempts(struct, attempts)
+    end
+
+    test "returns correct Model.Result.t() with updated attempts", %{struct: struct} do
+      attempts = [490, 590, 690, 790, 890]
+
+      assert %Result{attempts: ^attempts} = Result.update_attempts(struct, attempts)
+    end
+
+    test "updates only fields with no :no_change", %{struct: struct} do
+      attempts = [490, :no_change, 690, :no_change, 890]
+
+      assert %Result{attempts: [490, 700, 690, 690, 890]} =
+               Result.update_attempts(struct, attempts)
+    end
+  end
 end
