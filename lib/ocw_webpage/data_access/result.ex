@@ -104,4 +104,19 @@ defmodule OcwWebpage.DataAccess.Result do
       [element] -> {:ok, element}
     end
   end
+
+  @spec assign_index(%Schemas.Result{}) :: non_neg_integer | nil
+  def assign_index(result) do
+    db_result = Repo.preload(result, :round)
+
+    db_result_round_id = db_result.round.id
+
+    Ecto.Query.from(r in Schemas.Result,
+      where: r.round_id == ^db_result_round_id,
+      preload: :round
+    )
+    |> Repo.all()
+    |> Enum.sort_by(fn map -> {map.average, Enum.min(map.attempts)} end)
+    |> Enum.find_index(fn x -> x == db_result end)
+  end
 end

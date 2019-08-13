@@ -191,4 +191,21 @@ defmodule OcwWebpage.DataAccess.ResultTest do
                DataAccess.Result.validate_and_transform_params(%{params | "result" => new_time})
     end
   end
+
+  describe "assign_index/1" do
+    test "returns correct number when called" do
+      attempts_1 = [590, 470, 390, 430, 490]
+      attempts_2 = [690, 570, 490, 530, 590]
+      average_1 = 390
+      average_2 = 490
+      round = insert(:round)
+      insert(:result, attempts: attempts_1, average: average_1, round: round)
+      insert(:result, attempts: attempts_2, average: average_2, round: round)
+      result_1 = Repo.get_by(DataAccess.Schemas.Result, average: average_1)
+      result_2 = Repo.get_by(DataAccess.Schemas.Result, average: average_2)
+
+      assert 0 == DataAccess.Result.assign_index(result_1)
+      assert 1 == DataAccess.Result.assign_index(result_2)
+    end
+  end
 end
