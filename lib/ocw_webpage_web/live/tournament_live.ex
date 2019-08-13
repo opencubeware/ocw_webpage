@@ -54,16 +54,27 @@ defmodule OcwWebpageWeb.TournamentLive do
     IO.inspect(socket)
     IO.inspect(round_ids_match?(result, socket))
 
-    index =
-      Ecto.Query.from(r in DataAccess.Schemas.Result,
-        where: r.round_id == ^db_result_round_id,
-        preload: :round
-      )
-      |> OcwWebpage.Repo.all()
-      |> Enum.sort_by(fn map -> {map.average, Enum.min(map.attempts)} end)
-      |> Enum.find_index(fn x -> x == db_result end)
+    new_socket =
+      case round_ids_match?(result, socket) do
+        true ->
+          db_result = OcwWebpage.Repo.preload(result, :round)
+          db_result_round_id = db_result.round.id
 
-    new_socket = fetch_all(socket) |> assign(:index, index)
+          index =
+            Ecto.Query.from(r in DataAccess.Schemas.Result,
+              where: r.round_id == ^db_result_round_id,
+              preload: :round
+            )
+            |> OcwWebpage.Repo.all()
+            |> Enum.sort_by(fn map -> {map.average, Enum.min(map.attempts)} end)
+            |> Enum.find_index(fn x -> x == db_result end)
+
+          socket |> fetch_all() |> assign(:index, index)
+
+        false ->
+          socket |> fetch_all()
+      end
+
     {:noreply, new_socket}
   end
 
@@ -97,5 +108,9 @@ defmodule OcwWebpageWeb.TournamentLive do
       {:error, status} ->
         assign(socket, :error, status)
     end
+  end
+
+  def round_ids_match?(%{round_id: result_round_id}, %{assigns: %{round: %{id: round_id}}}) do
+    result_round_id == round_id
   end
 end
