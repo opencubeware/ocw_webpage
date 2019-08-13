@@ -96,8 +96,6 @@ defmodule OcwWebpageWeb.AdminTournamentLive do
   end
 
   def handle_event("edit-result", params, socket) do
-    IO.inspect(params)
-
     with {:ok, _result} <- Services.Tournaments.update_result(params) do
       {:noreply, fetch_all(socket)}
     end

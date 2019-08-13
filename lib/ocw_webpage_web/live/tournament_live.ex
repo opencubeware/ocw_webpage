@@ -50,8 +50,9 @@ defmodule OcwWebpageWeb.TournamentLive do
   end
 
   def handle_info({DataAccess.Round, [:round | _], result}, socket) do
-    db_result = OcwWebpage.Repo.preload(result, :round)
-    db_result_round_id = db_result.round.id
+    IO.inspect(result)
+    IO.inspect(socket)
+    IO.inspect(round_ids_match?(result, socket))
 
     index =
       Ecto.Query.from(r in DataAccess.Schemas.Result,
