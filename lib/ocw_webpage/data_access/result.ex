@@ -80,6 +80,7 @@ defmodule OcwWebpage.DataAccess.Result do
         attempts =
           list
           |> Enum.map(&String.to_integer/1)
+          |> Enum.map(&transform_from_no_dot_notation/1)
           |> Enum.map(&maybe_replace_zero_with_no_change/1)
 
         {:ok, %{attempts: attempts, id: id}}
@@ -94,6 +95,8 @@ defmodule OcwWebpage.DataAccess.Result do
 
   defp maybe_replace_zero_with_no_change(0), do: :no_change
   defp maybe_replace_zero_with_no_change(integer), do: integer
+
+  defp transform_from_no_dot_notation(time), do: time - div(time, 10_000) * 4000
 
   defp empty_or_not(list) do
     case list do
