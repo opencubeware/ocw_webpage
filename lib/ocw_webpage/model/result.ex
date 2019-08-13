@@ -35,8 +35,8 @@ defmodule OcwWebpage.Model.Result do
   def to_map(%{id: id, attempts: attempts, average: average, competitor: competitor}) do
     %{
       id: id,
-      attempts: Enum.map(attempts, &format_time/1),
-      best_solve: Enum.min(attempts) |> format_time(),
+      attempts: attempts |> Enum.map(&format_time/1),
+      best_solve: attempts |> Enum.min() |> format_time(),
       average: average |> format_time(),
       competitor: Model.Person.to_map(competitor)
     }
@@ -50,19 +50,22 @@ defmodule OcwWebpage.Model.Result do
   end
 
   defp minutes(centiseconds) do
-    div(centiseconds, 100)
+    centiseconds
+    |> div(100)
     |> div(60)
     |> add_zero_if_needed()
   end
 
   defp seconds(centiseconds) do
-    div(centiseconds, 100)
+    centiseconds
+    |> div(100)
     |> discard_full_minutes()
     |> add_zero_if_needed()
   end
 
   defp remains(centiseconds) do
-    rem(centiseconds, 100)
+    centiseconds
+    |> rem(100)
     |> add_zero_if_needed()
   end
 
@@ -75,11 +78,13 @@ defmodule OcwWebpage.Model.Result do
   @spec calculate_average(t()) :: t()
   def calculate_average(%__MODULE__{attempts: attempts} = model) when length(attempts) >= 3 do
     remaining_attempts =
-      Enum.min_max(attempts)
+      attempts
+      |> Enum.min_max()
       |> filter_min_max(attempts)
 
     average =
-      Enum.sum(remaining_attempts)
+      remaining_attempts
+      |> Enum.sum()
       |> div(length(remaining_attempts))
 
     %__MODULE__{model | average: average}
@@ -106,7 +111,4 @@ defmodule OcwWebpage.Model.Result do
 
   defp change_requested({x, y}) when y == :no_change, do: x
   defp change_requested({_x, y}), do: y
-
-  # no dot notation to centiseconds
-  # 124354 - div(124354, 10000) * 4000
 end
