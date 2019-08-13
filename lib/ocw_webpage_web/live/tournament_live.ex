@@ -1,7 +1,7 @@
 defmodule OcwWebpageWeb.TournamentLive do
   use Phoenix.LiveView
   require Ecto.Query
-  alias OcwWebpage.{DataAccess, Model, Services}
+  alias OcwWebpage.{DataAccess, Services}
 
   def render(assigns) do
     ~L"""
@@ -18,10 +18,10 @@ defmodule OcwWebpageWeb.TournamentLive do
           </div>
           <div class="col s3 sidebar">
             <%= OcwWebpageWeb.PageView.render("main_sidebar_card.html", assigns.round) %>
-            <%= OcwWebpageWeb.PageView.render("main_sidebar_list.html", assigns) %>
+
+    <%= OcwWebpageWeb.PageView.render("main_sidebar_list.html", assigns) %>
           </div>
         </div>
-        <a class="waves-effect waves-light btn" phx-click="random">Random number</a>
       </div>
     <% else %>
       <%= assigns.error %>
@@ -50,8 +50,17 @@ defmodule OcwWebpageWeb.TournamentLive do
     {:ok, fetch_all(new_socket)}
   end
 
-  def handle_info({DataAccess.Round, [:round | _], _}, socket) do
-    {:noreply, fetch_all(socket)}
+  def handle_info({DataAccess.Round, [:round | _], result}, socket) do
+    new_socket =
+      case round_ids_match?(result, socket) do
+        true ->
+          socket |> fetch_all() |> assign(:index, DataAccess.Result.assign_index(result))
+
+        false ->
+          socket |> fetch_all()
+      end
+
+    {:noreply, new_socket}
   end
 
   def handle_params(params, _url, socket) do
@@ -64,23 +73,6 @@ defmodule OcwWebpageWeb.TournamentLive do
     {:noreply, fetch_all(new_socket)}
   end
 
-  def handle_event("random", _params, socket) do
-    {:ok, result} = DataAccess.Round.update_testing()
-    db_result = OcwWebpage.Repo.preload(result, :round)
-    db_result_round_id = db_result.round.id
-
-    index =
-      Ecto.Query.from(r in DataAccess.Schemas.Result,
-        where: r.round_id == ^db_result_round_id,
-        preload: :round
-      )
-      |> OcwWebpage.Repo.all()
-      |> Enum.sort_by(fn map -> {map.average, Enum.min(map.attempts)} end)
-      |> Enum.find_index(fn x -> x == db_result end)
-
-    {:noreply, socket |> assign(:index, index)}
-  end
-
   defp fetch_all(
          %{
            assigns: %{
@@ -90,18 +82,20 @@ defmodule OcwWebpageWeb.TournamentLive do
            }
          } = socket
        ) do
-    case Services.Tournaments.fetch_round(tournament_name, event_name, round_name) do
-      {:ok, round} ->
-        socket
-        |> assign(:round, round)
-        |> assign(:records, DataAccess.Stubs.records())
-        |> assign(
-          :event_with_rounds,
-          Services.Tournaments.fetch_event_with_rounds(tournament_name)
-        )
-
+    with {:ok, round} <-
+           Services.Tournaments.fetch_round(tournament_name, event_name, round_name),
+         {:ok, event_with_rounds} <- Services.Tournaments.fetch_event_with_rounds(tournament_name) do
+      socket
+      |> assign(:round, round)
+      |> assign(:records, DataAccess.Stubs.records())
+      |> assign(:event_with_rounds, event_with_rounds)
+    else
       {:error, status} ->
         assign(socket, :error, status)
     end
+  end
+
+  def round_ids_match?(%{round_id: result_round_id}, %{assigns: %{round: %{id: round_id}}}) do
+    result_round_id == round_id
   end
 end

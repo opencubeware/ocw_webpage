@@ -11,6 +11,7 @@
 .env.development.local
 .env.test.local
 .env.production.local
+.dir-locals.el
 
 # The directory Mix downloads your dependencies sources to.
 /deps/

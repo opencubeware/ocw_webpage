@@ -4,6 +4,7 @@ defmodule OcwWebpage.Model.ResultTest do
 
   describe "new/3" do
     test "returns Result.t()" do
+      id = 5
       continent_name = "Europe"
       country_name = "Poland"
       country_iso2 = "pl"
@@ -17,6 +18,7 @@ defmodule OcwWebpage.Model.ResultTest do
       person = %{country: country, first_name: first_name, last_name: last_name, wca_id: wca_id}
 
       assert %Result{
+               id: ^id,
                attempts: ^attempts,
                average: ^average,
                competitor: %Person{
@@ -31,6 +33,7 @@ defmodule OcwWebpage.Model.ResultTest do
                }
              } =
                Result.new(%{
+                 id: id,
                  attempts: attempts,
                  average: average,
                  person: person
@@ -104,6 +107,109 @@ defmodule OcwWebpage.Model.ResultTest do
       assert "10:00.00" == Result.format_time(60000)
       assert "12:03.41" == Result.format_time(72341)
       assert "60:00.01" == Result.format_time(360_001)
+    end
+  end
+
+  describe "calculate_average/1" do
+    setup do
+      continent_name = "Europe"
+      country_name = "Poland"
+      country_iso2 = "pl"
+      first_name = "John"
+      last_name = "Doe"
+      wca_id = "2009wcaid"
+      attempts = [730, 700, 840, 690, 700]
+
+      %{
+        struct: %Result{
+          attempts: attempts,
+          average: nil,
+          competitor: %Person{
+            first_name: first_name,
+            last_name: last_name,
+            wca_id: wca_id,
+            country: %Country{
+              continent_name: continent_name,
+              name: country_name,
+              iso2: country_iso2
+            }
+          }
+        }
+      }
+    end
+
+    test "return nil when there is less than 3 attempts", %{struct: struct} do
+      attempts_1 = [590]
+      struct = %Result{struct | attempts: attempts_1}
+      assert %Result{average: nil} = Result.calculate_average(struct)
+
+      attempts_2 = [590, 690]
+      struct = %Result{struct | attempts: attempts_2}
+      assert %Result{average: nil} = Result.calculate_average(struct)
+    end
+
+    test "calculates average when there is more than 3 attempts", %{struct: struct} do
+      attempts = [380, 390, 400]
+      struct = %Result{struct | attempts: attempts}
+
+      assert %Result{average: 390} = Result.calculate_average(struct)
+    end
+
+    test "removes best and worst time when there is more than 3 attempts", %{struct: struct} do
+      attempts_1 = [530, 590, 680, 590]
+      struct = %Result{struct | attempts: attempts_1}
+      assert %Result{average: 590} = Result.calculate_average(struct)
+
+      attempts_2 = [530, 590, 600, 580, 680]
+      struct = %Result{struct | attempts: attempts_2}
+      assert %Result{average: 590} = Result.calculate_average(struct)
+    end
+  end
+
+  describe "update_attempts/2" do
+    setup do
+      continent_name = "Europe"
+      country_name = "Poland"
+      country_iso2 = "pl"
+      first_name = "John"
+      last_name = "Doe"
+      wca_id = "2009wcaid"
+      attempts = [730, 700, 840, 690, 700]
+
+      %{
+        struct: %Result{
+          attempts: attempts,
+          average: nil,
+          competitor: %Person{
+            first_name: first_name,
+            last_name: last_name,
+            wca_id: wca_id,
+            country: %Country{
+              continent_name: continent_name,
+              name: country_name,
+              iso2: country_iso2
+            }
+          }
+        }
+      }
+    end
+
+    test "returns error if attempts is not an array", %{struct: struct} do
+      attempts = "not an array"
+      assert {:error, :not_an_array} == Result.update_attempts(struct, attempts)
+    end
+
+    test "returns correct Model.Result.t() with updated attempts", %{struct: struct} do
+      attempts = [490, 590, 690, 790, 890]
+
+      assert %Result{attempts: ^attempts} = Result.update_attempts(struct, attempts)
+    end
+
+    test "updates only fields with no :no_change", %{struct: struct} do
+      attempts = [490, :no_change, 690, :no_change, 890]
+
+      assert %Result{attempts: [490, 700, 690, 690, 890]} =
+               Result.update_attempts(struct, attempts)
     end
   end
 end

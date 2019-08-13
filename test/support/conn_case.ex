@@ -20,6 +20,7 @@ defmodule OcwWebpageWeb.ConnCase do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
       alias OcwWebpageWeb.Router.Helpers, as: Routes
+      import OcwWebpage.Factory
 
       # The default endpoint for testing
       @endpoint OcwWebpageWeb.Endpoint

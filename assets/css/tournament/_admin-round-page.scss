@@ -1,0 +1,89 @@
+.admin-round-page {
+  height: 100vh;
+
+  .header {
+    display: flex;
+    align-items: center;
+    color: white;
+    background-color: $color-blue-dark;
+    margin-bottom: 0;
+
+    .board {
+      &__top {
+        font-size: 1.6rem;
+        margin-bottom: 0 !important;
+      }
+    }
+
+    .search-box {
+      padding-right: 3rem;
+      &__title {
+        text-align: right;
+      }
+
+      &__input{
+        float: right;
+        form {
+          input {
+            font-size: 1.5rem;
+            color: black;
+            background-color: white;
+            margin-bottom: 0 !important;
+          }
+        }
+      }
+    }
+  }
+  .body {
+    height: 100%;
+    .form {
+      padding-right: 3rem;
+      background-color: $color-red-light;
+
+      .form-input {
+        background-color: white;
+        font-size: 1.5rem;
+      }
+
+      .form-button {
+        background-color: $color-blue-dark;
+      }
+      .right {
+        text-align: right;
+      }
+
+      .sidebar__list {
+        &--header {
+          text-align: center;
+          background-color: $color-grey;
+          color: black;
+        }
+        .collapsible-body {
+          .collection{
+            .collection-item {
+              text-align: center;
+              color: black;
+            }
+          }
+        }
+      }
+    }
+
+    .table {
+      padding-right: 3rem;
+      &__board {
+        table {
+          tbody {
+            tr.pointer {
+              cursor: pointer;
+
+              &:hover {
+                background-color: $color-light-grey;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -22,6 +22,7 @@ defmodule OcwWebpage.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import OcwWebpage.DataCase
+      import OcwWebpage.Factory
     end
   end
 

@@ -43,10 +43,11 @@ defmodule OcwWebpage.MixProject do
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      {:ex_machina, "~> 2.2"},
       {:dialyxir, "~> 0.5.1", only: [:dev], runtime: false},
       {:fe, git: "https://github.com/distributed-owls/fe", branch: "master"},
       {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
+      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
+      {:ex_machina, "~> 2.3", only: :test},
       {:plug_cowboy, "~> 2.0"}
     ]
   end

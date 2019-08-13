@@ -1,0 +1,25 @@
+<div class="col s12 sidebar__list">
+  <ul class="collapsible popout">
+    <%= for event <- @event_with_rounds.events do %>
+      <li>
+        <div class="collapsible-header sidebar__list--header"><%= event.name %></div>
+        <div class="collapsible-body">
+          <ul class="collection">
+            <%= for round_name <- event.round_names do %>
+              <%= live_link(round_name,
+                to: Routes.live_path(
+                  @socket,
+                  OcwWebpageWeb.AdminTournamentLive,
+                  @tournament_name,
+                  event.name,
+                  round_name
+                ),
+                class: "collection-item")
+              %>
+            <% end %>
+          </ul>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
