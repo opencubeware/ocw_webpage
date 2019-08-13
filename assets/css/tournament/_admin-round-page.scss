@@ -6,6 +6,13 @@
     background-color: $color-blue-dark;
     margin-bottom: 0;
 
+    .board {
+      &__top {
+        font-size: 1.6rem;
+        margin-bottom: 0 !important;
+      }
+    }
+
     .search-box {
       padding-right: 3rem;
       &__title {
