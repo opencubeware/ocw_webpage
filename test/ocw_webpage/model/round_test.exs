@@ -4,6 +4,7 @@ defmodule OcwWebpage.Model.RoundTest do
 
   describe "new/3" do
     test "returns Round.t()" do
+      id = 5
       continent_name = "Europe"
       country_name = "Poland"
       country_iso2 = "pl"
@@ -23,6 +24,7 @@ defmodule OcwWebpage.Model.RoundTest do
       event = %{event_name: %{name: event_name}, tournament: %{name: tournament_name}}
 
       assert %Round{
+               id: ^id,
                event_name: ^event_name,
                name: ^name,
                tournament_name: ^tournament_name,
@@ -44,6 +46,7 @@ defmodule OcwWebpage.Model.RoundTest do
                ]
              } =
                Round.new(%{
+                 id: id,
                  event: event,
                  round_name: round_name,
                  results: results
@@ -53,6 +56,7 @@ defmodule OcwWebpage.Model.RoundTest do
 
   describe "to_map/1" do
     test "returns propper map from struct" do
+      id = 5
       continent_name = "Europe"
       country_name = "Poland"
       country_iso2 = "pl"
@@ -70,6 +74,7 @@ defmodule OcwWebpage.Model.RoundTest do
       name = "First Round"
 
       struct = %Round{
+        id: id,
         event_name: event_name,
         name: name,
         tournament_name: tournament_name,
@@ -92,6 +97,7 @@ defmodule OcwWebpage.Model.RoundTest do
       }
 
       assert %{
+               id: ^id,
                name: ^name,
                event_name: ^event_name,
                tournament_name: ^tournament_name,
