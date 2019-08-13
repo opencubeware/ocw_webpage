@@ -41,10 +41,11 @@ defmodule OcwWebpage.DataAccess.Result do
   end
 
   @spec update_times_in_db(Model.Result.t()) :: FE.Result.t(%Schemas.Result{})
+
   def update_times_in_db(model) do
     Schemas.Result
     |> Repo.get(model.id)
-    |> Ecto.Changeset.change(%{attempts: model.attempts, average: model.average})
+    |> Schemas.Result.changeset(%{attempts: model.attempts, average: model.average})
     |> Repo.update()
     |> broadcast_change([:round, :updated])
   end
