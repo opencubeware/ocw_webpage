@@ -21,7 +21,6 @@ defmodule OcwWebpageWeb.TournamentLive do
             <%= OcwWebpageWeb.PageView.render("main_sidebar_list.html", assigns) %>
           </div>
         </div>
-        <a class="waves-effect waves-light btn" phx-click="random">Random number</a>
       </div>
     <% else %>
       <%= assigns.error %>
@@ -75,11 +74,6 @@ defmodule OcwWebpageWeb.TournamentLive do
       |> assign(:round_name, URI.decode(params["round_name"]))
 
     {:noreply, fetch_all(new_socket)}
-  end
-
-  def handle_event("random", _params, socket) do
-    DataAccess.Round.update_testing()
-    {:noreply, socket}
   end
 
   defp fetch_all(

@@ -29,7 +29,6 @@ defmodule OcwWebpageWeb.AdminTournamentLive do
             <%= OcwWebpageWeb.PageView.render("admin_board_table.html", assigns) %>
           </div>
         </div>
-        <a class="waves-effect waves-light btn" phx-click="random">Random number</a>
       </div>
     <% else %>
       <%= assigns.error %>
@@ -98,18 +97,16 @@ defmodule OcwWebpageWeb.AdminTournamentLive do
 
   def handle_event("edit-result", params, socket) do
     IO.inspect(params)
-    {:noreply, socket}
+
+    with {:ok, _result} <- Services.Tournaments.update_result(params) do
+      {:noreply, fetch_all(socket)}
+    end
   end
 
   def handle_event("change-player", index, socket) do
     with {:ok, result} <- Services.Tournaments.fetch_result(index) do
       {:noreply, assign(socket, :current_result, result)}
     end
-  end
-
-  def handle_event("random", _params, socket) do
-    DataAccess.Round.update_testing()
-    {:noreply, socket}
   end
 
   defp fetch_all(

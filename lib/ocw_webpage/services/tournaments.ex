@@ -28,9 +28,9 @@ defmodule OcwWebpage.Services.Tournaments do
 
   @spec update_result(map()) :: Result.t(map())
   def update_result(params) do
-    with {:ok, %{attempts: attempts} = valid_params} =
+    with {:ok, %{attempts: attempts, id: id}} =
            DataAccess.Result.validate_and_transform_params(params) do
-      Model.Result.new(valid_params)
+      DataAccess.Result.get(id)
       |> Result.map(&Model.Result.update_attempts(&1, attempts))
       |> Result.map(&Model.Result.calculate_average/1)
       |> Result.and_then(&DataAccess.Result.update_times_in_db/1)
