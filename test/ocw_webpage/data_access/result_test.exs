@@ -83,31 +83,58 @@ defmodule OcwWebpage.DataAccess.ResultTest do
     setup do
       %{
         params: %{
-          first: "790",
-          second: "490",
-          third: "320",
-          fourth: "590",
-          fifth: "540",
-          id: "1"
+          "result" => %{
+            "first" => "790",
+            "second" => "490",
+            "third" => "320",
+            "fourth" => "590",
+            "fifth" => "540",
+            "id" => "1"
+          }
         }
       }
     end
 
     test "returns error when any of the attempts is not integer", %{params: params} do
-      assert {:error, :param_not_integer} ==
-               DataAccess.Result.validate_and_transform_params(%{params | first: "test"})
+      new_time =
+        params
+        |> Map.get("result")
+        |> Map.put("first", "test")
 
       assert {:error, :param_not_integer} ==
-               DataAccess.Result.validate_and_transform_params(%{params | second: "test"})
+               DataAccess.Result.validate_and_transform_params(%{params | "result" => new_time})
+
+      new_time =
+        params
+        |> Map.get("result")
+        |> Map.put("second", "test")
 
       assert {:error, :param_not_integer} ==
-               DataAccess.Result.validate_and_transform_params(%{params | third: "test"})
+               DataAccess.Result.validate_and_transform_params(%{params | "result" => new_time})
+
+      new_time =
+        params
+        |> Map.get("result")
+        |> Map.put("third", "test")
 
       assert {:error, :param_not_integer} ==
-               DataAccess.Result.validate_and_transform_params(%{params | fourth: "test"})
+               DataAccess.Result.validate_and_transform_params(%{params | "result" => new_time})
+
+      new_time =
+        params
+        |> Map.get("result")
+        |> Map.put("fourth", "test")
 
       assert {:error, :param_not_integer} ==
-               DataAccess.Result.validate_and_transform_params(%{params | fifth: "test"})
+               DataAccess.Result.validate_and_transform_params(%{params | "result" => new_time})
+
+      new_time =
+        params
+        |> Map.get("result")
+        |> Map.put("fifth", "test")
+
+      assert {:error, :param_not_integer} ==
+               DataAccess.Result.validate_and_transform_params(%{params | "result" => new_time})
     end
 
     test "returns FE.Result.t() when everything is ok", %{params: params} do
@@ -116,39 +143,52 @@ defmodule OcwWebpage.DataAccess.ResultTest do
     end
 
     test "returns FE.Result.t() with :no_change when field is missing", %{params: params} do
+      new_time =
+        params
+        |> Map.get("result")
+        |> Map.put("second", "")
+
       assert {:ok, %{attempts: [790, :no_change, 320, 590, 540], id: "1"}} ==
-               DataAccess.Result.validate_and_transform_params(%{params | second: ""})
+               DataAccess.Result.validate_and_transform_params(%{params | "result" => new_time})
+
+      new_time =
+        params
+        |> Map.get("result")
+        |> Map.merge(%{"first" => "", "second" => ""})
 
       assert {:ok, %{attempts: [:no_change, :no_change, 320, 590, 540], id: "1"}} ==
-               DataAccess.Result.validate_and_transform_params(%{params | first: "", second: ""})
+               DataAccess.Result.validate_and_transform_params(%{params | "result" => new_time})
+
+      new_time =
+        params
+        |> Map.get("result")
+        |> Map.merge(%{"first" => "", "second" => "", "third" => ""})
 
       assert {:ok, %{attempts: [:no_change, :no_change, :no_change, 590, 540], id: "1"}} ==
-               DataAccess.Result.validate_and_transform_params(%{
-                 params
-                 | first: "",
-                   second: "",
-                   third: ""
-               })
+               DataAccess.Result.validate_and_transform_params(%{params | "result" => new_time})
+
+      new_time =
+        params
+        |> Map.get("result")
+        |> Map.merge(%{"first" => "", "second" => "", "third" => "", "fourth" => ""})
 
       assert {:ok, %{attempts: [:no_change, :no_change, :no_change, :no_change, 540], id: "1"}} ==
-               DataAccess.Result.validate_and_transform_params(%{
-                 params
-                 | first: "",
-                   second: "",
-                   third: "",
-                   fourth: ""
-               })
+               DataAccess.Result.validate_and_transform_params(%{params | "result" => new_time})
+
+      new_time =
+        params
+        |> Map.get("result")
+        |> Map.merge(%{
+          "first" => "",
+          "second" => "",
+          "third" => "",
+          "fourth" => "",
+          "fifth" => ""
+        })
 
       assert {:ok,
               %{attempts: [:no_change, :no_change, :no_change, :no_change, :no_change], id: "1"}} ==
-               DataAccess.Result.validate_and_transform_params(%{
-                 params
-                 | first: "",
-                   second: "",
-                   third: "",
-                   fourth: "",
-                   fifth: ""
-               })
+               DataAccess.Result.validate_and_transform_params(%{params | "result" => new_time})
     end
   end
 end

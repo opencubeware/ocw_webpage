@@ -1,6 +1,6 @@
 defmodule OcwWebpage.DataAccess.Result do
   import Ecto.Query, only: [from: 2]
-  alias OcwWebpage.{Repo, DataAccess.Schemas, Model, Constants}
+  alias OcwWebpage.{Repo, DataAccess, DataAccess.Schemas, Model, Constants}
 
   @spec get(String.t()) :: FE.Result.t()
   def get(index) do
@@ -40,22 +40,35 @@ defmodule OcwWebpage.DataAccess.Result do
     |> Enum.map(&Model.Result.new/1)
   end
 
-  @spec update_times_in_db(Model.Result.t()) :: %Schemas.Result{}
+  @spec update_times_in_db(Model.Result.t()) :: FE.Result.t(%Schemas.Result{})
   def update_times_in_db(model) do
     Schemas.Result
     |> Repo.get(model.id)
     |> Ecto.Changeset.change(%{attempts: model.attempts, average: model.average})
     |> Repo.update()
+    |> broadcast_change([:round, :updated])
+  end
+
+  defp broadcast_change({:ok, result}, event) do
+    Phoenix.PubSub.broadcast(
+      OcwWebpage.PubSub,
+      inspect(DataAccess.Round),
+      {DataAccess.Round, event, result}
+    )
+
+    {:ok, result}
   end
 
   @spec validate_and_transform_params(map()) :: FE.Result.t(list(integer))
   def validate_and_transform_params(%{
-        first: first,
-        second: second,
-        third: third,
-        fourth: fourth,
-        fifth: fifth,
-        id: id
+        "result" => %{
+          "first" => first,
+          "second" => second,
+          "third" => third,
+          "fourth" => fourth,
+          "fifth" => fifth,
+          "id" => id
+        }
       }) do
     list =
       [first, second, third, fourth, fifth]

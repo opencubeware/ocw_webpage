@@ -23,6 +23,17 @@ defmodule OcwWebpage.Services.Tournaments do
   @spec fetch_result(String.t()) :: Result.t(map())
   def fetch_result(index) do
     DataAccess.Result.get(index)
-    |> Result.map(&OcwWebpage.Model.Result.to_map/1)
+    |> Result.map(&Model.Result.to_map/1)
+  end
+
+  @spec update_result(map()) :: Result.t(map())
+  def update_result(params) do
+    with {:ok, %{attempts: attempts} = valid_params} =
+           DataAccess.Result.validate_and_transform_params(params) do
+      Model.Result.new(valid_params)
+      |> Result.map(&Model.Result.update_attempts(&1, attempts))
+      |> Result.map(&Model.Result.calculate_average/1)
+      |> Result.and_then(&DataAccess.Result.update_times_in_db/1)
+    end
   end
 end
