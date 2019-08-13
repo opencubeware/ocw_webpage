@@ -1,4 +1,6 @@
 .admin-round-page {
+  height: 100vh;
+
   .header {
     display: flex;
     align-items: center;
@@ -33,6 +35,7 @@
     }
   }
   .body {
+    height: 100%;
     .form {
       padding-right: 3rem;
       background-color: $color-red-light;
@@ -47,6 +50,22 @@
       }
       .right {
         text-align: right;
+      }
+
+      .sidebar__list {
+        &--header {
+          text-align: center;
+          background-color: $color-grey;
+          color: black;
+        }
+        .collapsible-body {
+          .collection{
+            .collection-item {
+              text-align: center;
+              color: black;
+            }
+          }
+        }
       }
     }
 

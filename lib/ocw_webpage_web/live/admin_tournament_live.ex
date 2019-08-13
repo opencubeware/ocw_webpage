@@ -24,6 +24,7 @@ defmodule OcwWebpageWeb.AdminTournamentLive do
         <div class="row body">
           <div class="col s3 form">
             <%= OcwWebpageWeb.PageView.render("admin_result_box_form.html", assigns) %>
+            <%= OcwWebpageWeb.PageView.render("admin_sidebar_list.html", assigns) %>
           </div>
           <div class="col s9 table">
             <%= OcwWebpageWeb.PageView.render("admin_board_table.html", assigns) %>
