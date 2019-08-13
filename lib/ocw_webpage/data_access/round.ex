@@ -14,7 +14,8 @@ defmodule OcwWebpage.DataAccess.Round do
 
   @spec fetch(String.t(), String.t(), String.t()) :: Result.t(Model.Round.t())
   def fetch(tournament_name, event_name, round_name) do
-    full_round_query(tournament_name, event_name, round_name)
+    tournament_name
+    |> full_round_query(event_name, round_name)
     |> Repo.all()
     |> empty_or_not()
     |> Result.map(&Model.Round.new/1)

@@ -141,28 +141,28 @@ defmodule OcwWebpage.Model.ResultTest do
     test "return nil when there is less than 3 attempts", %{struct: struct} do
       attempts_1 = [590]
       struct = %Result{struct | attempts: attempts_1}
-      assert %Result{average: nil} = Result.calculate_average(struct)
+      assert %Result{average: nil} = Result.calculate_average(struct, :ao5)
 
       attempts_2 = [590, 690]
       struct = %Result{struct | attempts: attempts_2}
-      assert %Result{average: nil} = Result.calculate_average(struct)
+      assert %Result{average: nil} = Result.calculate_average(struct, :ao5)
     end
 
     test "calculates average when there is more than 3 attempts", %{struct: struct} do
       attempts = [380, 390, 400]
       struct = %Result{struct | attempts: attempts}
 
-      assert %Result{average: 390} = Result.calculate_average(struct)
+      assert %Result{average: 390} = Result.calculate_average(struct, :ao5)
     end
 
     test "removes best and worst time when there is more than 3 attempts", %{struct: struct} do
       attempts_1 = [530, 590, 680, 590]
       struct = %Result{struct | attempts: attempts_1}
-      assert %Result{average: 590} = Result.calculate_average(struct)
+      assert %Result{average: 590} = Result.calculate_average(struct, :ao5)
 
       attempts_2 = [530, 590, 600, 580, 680]
       struct = %Result{struct | attempts: attempts_2}
-      assert %Result{average: 590} = Result.calculate_average(struct)
+      assert %Result{average: 590} = Result.calculate_average(struct, :ao5)
     end
   end
 

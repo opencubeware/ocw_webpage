@@ -23,7 +23,9 @@ defmodule OcwWebpage.Factory do
   def round_factory() do
     %Schemas.Round{
       round_name_id: 1,
-      event: build(:event)
+      event: build(:event),
+      cutoff: nil,
+      format: "ao5"
     }
   end
 

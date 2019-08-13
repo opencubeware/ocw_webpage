@@ -36,11 +36,16 @@ defmodule OcwWebpage.Model.Result do
     %{
       id: id,
       attempts: attempts |> Enum.map(&format_time/1),
-      best_solve: attempts |> Enum.min() |> format_time(),
+      best_solve: format_best_solve(attempts),
       average: average |> format_time(),
       competitor: Model.Person.to_map(competitor)
     }
   end
+
+  defp format_best_solve([]), do: format_time(nil)
+
+  defp format_best_solve(attempts) when is_list(attempts),
+    do: attempts |> Enum.min() |> format_time()
 
   @spec format_time(integer | nil) :: String.t()
   def format_time(nil), do: ""
@@ -75,8 +80,18 @@ defmodule OcwWebpage.Model.Result do
   defp add_zero_if_needed(time) when time < 10, do: "0#{time}"
   defp add_zero_if_needed(time), do: "#{time}"
 
-  @spec calculate_average(t()) :: t()
-  def calculate_average(%__MODULE__{attempts: attempts} = model) when length(attempts) >= 3 do
+  @spec calculate_average(t(), :atom) :: t()
+  def calculate_average(model, :ao5) do
+    calculate_average_of_five(model)
+  end
+
+  def calculate_average(%__MODULE__{attempts: attempts} = model, :mo3) do
+    mean = attempts |> Enum.sum() |> div(length(attempts))
+    %__MODULE__{model | average: mean}
+  end
+
+  defp calculate_average_of_five(%__MODULE__{attempts: attempts} = model)
+       when length(attempts) >= 3 do
     remaining_attempts =
       attempts
       |> Enum.min_max()
@@ -90,7 +105,7 @@ defmodule OcwWebpage.Model.Result do
     %__MODULE__{model | average: average}
   end
 
-  def calculate_average(model), do: model
+  defp calculate_average_of_five(model), do: model
 
   defp filter_min_max({min, max}, attempts) do
     Enum.filter(attempts, fn x -> x != min and x != max end)

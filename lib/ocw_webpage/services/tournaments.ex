@@ -32,12 +32,12 @@ defmodule OcwWebpage.Services.Tournaments do
 
   @spec update_result(map()) :: Result.t(map())
   def update_result(params) do
-    with {:ok, %{attempts: attempts, id: id}} =
+    with {:ok, %{attempts: attempts, id: id, format: format}} <-
            DataAccess.Result.validate_and_transform_params(params) do
       id
       |> DataAccess.Result.get()
       |> Result.map(&Model.Result.update_attempts(&1, attempts))
-      |> Result.map(&Model.Result.calculate_average/1)
+      |> Result.map(&Model.Result.calculate_average(&1, format))
       |> Result.and_then(&DataAccess.Result.update_times_in_db/1)
     end
   end

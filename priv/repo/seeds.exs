@@ -300,13 +300,25 @@ country = Repo.get(Country, 141)
 
 tournament = Repo.insert!(%Tournament{name: "Cracow Open 2013", country: country})
 
+# 3x3x3
 event1 = Repo.insert!(%Event{event_name: event_name1, tournament: tournament})
+# 2x2x2
 event2 = Repo.insert!(%Event{event_name: event_name2, tournament: tournament})
+# 6x6x6
+event3 = Repo.insert!(%Event{event_name: event_name5, tournament: tournament})
 
-round1 = Repo.insert!(%Round{round_name: round_name1, event: event1})
-round2 = Repo.insert!(%Round{round_name: round_name2, event: event1})
-round3 = Repo.insert!(%Round{round_name: round_name1, event: event2})
-round4 = Repo.insert!(%Round{round_name: round_name2, event: event2})
+# First Round 3x3x3
+round1 = Repo.insert!(%Round{round_name: round_name1, event: event1, cutoff: 300, format: "ao5"})
+# Second Round 3x3x3
+round2 = Repo.insert!(%Round{round_name: round_name2, event: event1, cutoff: nil, format: "ao5"})
+# First Round 2x2x2
+round3 = Repo.insert!(%Round{round_name: round_name1, event: event2, cutoff: 300, format: "ao5"})
+# Second Round 2x2x2
+round4 = Repo.insert!(%Round{round_name: round_name2, event: event2, cutoff: nil, format: "ao5"})
+# First Round 6x6x6
+round5 = Repo.insert!(%Round{round_name: round_name1, event: event3, cutoff: 300, format: "mo3"})
+# Second Round 6x6x6
+round6 = Repo.insert!(%Round{round_name: round_name2, event: event3, cutoff: nil, format: "mo3"})
 
 Repo.insert(%Result{
   round: round1,
@@ -389,5 +401,47 @@ Repo.insert(%Result{
   round: round4,
   attempts: [310, 620, 730, 530, 740],
   average: 586,
+  competitor_id: person3.id
+})
+
+Repo.insert(%Result{
+  round: round5,
+  attempts: [0, 0, 0],
+  average: nil,
+  competitor_id: person1.id
+})
+
+Repo.insert(%Result{
+  round: round5,
+  attempts: [0, 0, 0],
+  average: nil,
+  competitor_id: person2.id
+})
+
+Repo.insert(%Result{
+  round: round5,
+  attempts: [0, 0, 0],
+  average: nil,
+  competitor_id: person3.id
+})
+
+Repo.insert(%Result{
+  round: round6,
+  attempts: [0, 0, 0],
+  average: nil,
+  competitor_id: person1.id
+})
+
+Repo.insert(%Result{
+  round: round6,
+  attempts: [0, 0, 0],
+  average: nil,
+  competitor_id: person2.id
+})
+
+Repo.insert(%Result{
+  round: round6,
+  attempts: [0, 0, 0],
+  average: nil,
   competitor_id: person3.id
 })

@@ -89,6 +89,7 @@ defmodule OcwWebpage.DataAccess.ResultTest do
             "third" => "320",
             "fourth" => "590",
             "fifth" => "540",
+            "format" => "Average of 5",
             "id" => "1"
           }
         }
@@ -138,7 +139,7 @@ defmodule OcwWebpage.DataAccess.ResultTest do
     end
 
     test "returns FE.Result.t() when everything is ok", %{params: params} do
-      assert {:ok, %{attempts: [790, 490, 320, 590, 540], id: "1"}} ==
+      assert {:ok, %{attempts: [790, 490, 320, 590, 540], id: "1", format: :ao5}} ==
                DataAccess.Result.validate_and_transform_params(params)
     end
 
@@ -146,33 +147,45 @@ defmodule OcwWebpage.DataAccess.ResultTest do
       new_time =
         params
         |> Map.get("result")
-        |> Map.put("second", "")
+        |> Map.merge(%{"format" => "Average of 5", "second" => ""})
 
-      assert {:ok, %{attempts: [790, :no_change, 320, 590, 540], id: "1"}} ==
+      assert {:ok, %{attempts: [790, :no_change, 320, 590, 540], id: "1", format: :ao5}} ==
                DataAccess.Result.validate_and_transform_params(%{params | "result" => new_time})
 
       new_time =
         params
         |> Map.get("result")
-        |> Map.merge(%{"first" => "", "second" => ""})
+        |> Map.merge(%{"format" => "Average of 5", "first" => "", "second" => ""})
 
-      assert {:ok, %{attempts: [:no_change, :no_change, 320, 590, 540], id: "1"}} ==
+      assert {:ok, %{attempts: [:no_change, :no_change, 320, 590, 540], id: "1", format: :ao5}} ==
                DataAccess.Result.validate_and_transform_params(%{params | "result" => new_time})
 
       new_time =
         params
         |> Map.get("result")
-        |> Map.merge(%{"first" => "", "second" => "", "third" => ""})
+        |> Map.merge(%{"format" => "Average of 5", "first" => "", "second" => "", "third" => ""})
 
-      assert {:ok, %{attempts: [:no_change, :no_change, :no_change, 590, 540], id: "1"}} ==
+      assert {:ok,
+              %{attempts: [:no_change, :no_change, :no_change, 590, 540], id: "1", format: :ao5}} ==
                DataAccess.Result.validate_and_transform_params(%{params | "result" => new_time})
 
       new_time =
         params
         |> Map.get("result")
-        |> Map.merge(%{"first" => "", "second" => "", "third" => "", "fourth" => ""})
+        |> Map.merge(%{
+          "format" => "Average of 5",
+          "first" => "",
+          "second" => "",
+          "third" => "",
+          "fourth" => ""
+        })
 
-      assert {:ok, %{attempts: [:no_change, :no_change, :no_change, :no_change, 540], id: "1"}} ==
+      assert {:ok,
+              %{
+                attempts: [:no_change, :no_change, :no_change, :no_change, 540],
+                id: "1",
+                format: :ao5
+              }} ==
                DataAccess.Result.validate_and_transform_params(%{params | "result" => new_time})
 
       new_time =
@@ -183,11 +196,16 @@ defmodule OcwWebpage.DataAccess.ResultTest do
           "second" => "",
           "third" => "",
           "fourth" => "",
+          "format" => "Average of 5",
           "fifth" => ""
         })
 
       assert {:ok,
-              %{attempts: [:no_change, :no_change, :no_change, :no_change, :no_change], id: "1"}} ==
+              %{
+                attempts: [:no_change, :no_change, :no_change, :no_change, :no_change],
+                id: "1",
+                format: :ao5
+              }} ==
                DataAccess.Result.validate_and_transform_params(%{params | "result" => new_time})
     end
   end

@@ -68,6 +68,7 @@ defmodule OcwWebpage.DataAccess.Result do
           "third" => third,
           "fourth" => fourth,
           "fifth" => fifth,
+          "format" => format,
           "id" => id
         }
       }) do
@@ -83,7 +84,7 @@ defmodule OcwWebpage.DataAccess.Result do
           |> Enum.map(&transform_from_no_dot_notation/1)
           |> Enum.map(&maybe_replace_zero_with_no_change/1)
 
-        {:ok, %{attempts: attempts, id: id}}
+        {:ok, %{attempts: attempts, id: id, format: Model.Round.map_round_format(format)}}
 
       true ->
         {:error, :param_not_integer}

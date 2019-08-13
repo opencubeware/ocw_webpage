@@ -4,6 +4,7 @@
       <div class="col s12 right">
         <%= "#{assigns.current_result.competitor.first_name} #{assigns.current_result.competitor.last_name}" %>
         <%= Phoenix.HTML.Form.hidden_input :result, :id, value: assigns.current_result.id %>
+        <%= Phoenix.HTML.Form.hidden_input :result, :format, value: assigns.round.format %>
       </div>
     </div>
     <div class="row">

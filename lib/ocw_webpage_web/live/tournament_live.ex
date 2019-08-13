@@ -18,8 +18,7 @@ defmodule OcwWebpageWeb.TournamentLive do
           </div>
           <div class="col s3 sidebar">
             <%= OcwWebpageWeb.PageView.render("main_sidebar_card.html", assigns.round) %>
-
-    <%= OcwWebpageWeb.PageView.render("main_sidebar_list.html", assigns) %>
+            <%= OcwWebpageWeb.PageView.render("main_sidebar_list.html", assigns) %>
           </div>
         </div>
       </div>
