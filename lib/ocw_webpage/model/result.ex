@@ -57,7 +57,6 @@ defmodule OcwWebpage.Model.Result do
   end
 
   defp format_best_solve([]), do: nil
-
   defp format_best_solve(attempts) when is_list(attempts), do: attempts |> Enum.min()
 
   @spec format_time(integer | FE.Maybe.t(integer)) :: String.t()
