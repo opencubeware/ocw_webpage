@@ -1,18 +1,19 @@
 defmodule OcwWebpage.Model.Result do
   alias OcwWebpage.Model
-  defstruct [:id, :attempts, :average, :competitor]
+  defstruct [:id, :attempts, :best_solve, :average, :competitor]
 
   @type t :: %__MODULE__{
           id: integer(),
           attempts: [integer()],
-          average: integer(),
+          best_solve: FE.Maybe.t(integer),
+          average: FE.Maybe.t(integer),
           competitor: Model.Person.t()
         }
 
   @spec new(%{
           id: integer(),
           attempts: [integer()],
-          average: integer(),
+          average: integer | nil,
           person: %{
             country: map(),
             first_name: String.t(),
@@ -22,35 +23,48 @@ defmodule OcwWebpage.Model.Result do
         }) :: t()
   def new(%{id: id, attempts: attempts, average: average, person: competitor}) do
     competitor = Model.Person.new(competitor)
-    struct(__MODULE__, %{id: id, attempts: attempts, average: average, competitor: competitor})
+
+    struct(__MODULE__, %{
+      id: id,
+      attempts: attempts,
+      average: FE.Maybe.new(average),
+      best_solve: attempts |> format_best_solve() |> FE.Maybe.new(),
+      competitor: competitor
+    })
   end
 
   @spec to_map(t()) :: %{
-          id: integer(),
+          id: integer,
           attempts: [String.t()],
           average: String.t(),
           best_solve: String.t(),
           competitor: map()
         }
-  def to_map(%{id: id, attempts: attempts, average: average, competitor: competitor}) do
+  def to_map(%{
+        id: id,
+        attempts: attempts,
+        average: average,
+        best_solve: best_solve,
+        competitor: competitor
+      }) do
     %{
       id: id,
       attempts: attempts |> Enum.map(&format_time/1),
-      best_solve: format_best_solve(attempts),
+      best_solve: best_solve |> format_time(),
       average: average |> format_time(),
       competitor: Model.Person.to_map(competitor)
     }
   end
 
-  defp format_best_solve([]), do: format_time(nil)
+  defp format_best_solve([]), do: nil
 
-  defp format_best_solve(attempts) when is_list(attempts),
-    do: attempts |> Enum.min() |> format_time()
+  defp format_best_solve(attempts) when is_list(attempts), do: attempts |> Enum.min()
 
-  @spec format_time(integer | nil) :: String.t()
-  def format_time(nil), do: ""
+  @spec format_time(integer | FE.Maybe.t(integer)) :: String.t()
+  def format_time(:nothing), do: ""
+  def format_time({:just, average}), do: format_time(average)
 
-  def format_time(centiseconds) do
+  def format_time(centiseconds) when is_integer(centiseconds) do
     "#{minutes(centiseconds)}:#{seconds(centiseconds)}.#{remains(centiseconds)}"
   end
 

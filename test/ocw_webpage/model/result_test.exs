@@ -12,6 +12,7 @@ defmodule OcwWebpage.Model.ResultTest do
       last_name = "Doe"
       wca_id = "2009wcaid"
       attempts = [730, 700, 840, 690, 700]
+      best_solve = 690
       average = 720
       continent = %{name: continent_name}
       country = %{continent: continent, name: country_name, iso2: country_iso2}
@@ -20,7 +21,8 @@ defmodule OcwWebpage.Model.ResultTest do
       assert %Result{
                id: ^id,
                attempts: ^attempts,
-               average: ^average,
+               average: {:just, ^average},
+               best_solve: {:just, ^best_solve},
                competitor: %Person{
                  first_name: ^first_name,
                  last_name: ^last_name,
@@ -50,7 +52,8 @@ defmodule OcwWebpage.Model.ResultTest do
       last_name = "Doe"
       wca_id = "2009wcaid"
       attempts = [730, 700, 840, 690, 700]
-      average = 720
+      average = {:just, 720}
+      best_solve = {:just, 690}
       attempts_translated = ["00:07.30", "00:07.00", "00:08.40", "00:06.90", "00:07.00"]
       average_translated = "00:07.20"
       best_solve_translated = "00:06.90"
@@ -58,6 +61,7 @@ defmodule OcwWebpage.Model.ResultTest do
       struct = %Result{
         attempts: attempts,
         average: average,
+        best_solve: best_solve,
         competitor: %Person{
           first_name: first_name,
           last_name: last_name,

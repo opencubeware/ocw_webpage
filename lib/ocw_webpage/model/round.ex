@@ -6,7 +6,7 @@ defmodule OcwWebpage.Model.Round do
           event_name: String.t(),
           name: String.t(),
           results: [Model.Result.t()],
-          cutoff: integer | nil,
+          cutoff: FE.Maybe.t(integer),
           format: String.t(),
           tournament_name: String.t()
         }
@@ -31,11 +31,22 @@ defmodule OcwWebpage.Model.Round do
       id: id,
       event_name: event_name,
       name: round_name,
-      cutoff: cutoff,
+      cutoff: FE.Maybe.new(cutoff),
       format: format,
       tournament_name: tournament_name,
-      results: Enum.map(results, &Model.Result.new/1)
+      results: build_and_sort_results(results)
     })
+  end
+
+  defp build_and_sort_results(results) do
+    results
+    |> Enum.map(&Model.Result.new/1)
+    |> Enum.sort(
+      &((&1.average < &2.average or
+           (&1.average == &2.average and
+              &1.best_solve < &2.best_solve)) and
+          &1.average != FE.Maybe.nothing())
+    )
   end
 
   @spec to_map(t()) :: %{
@@ -61,16 +72,10 @@ defmodule OcwWebpage.Model.Round do
       name: name,
       event_name: event_name,
       tournament_name: tournament_name,
-      results: map_results(results),
+      results: Enum.map(results, &Model.Result.to_map/1),
       format: map_round_format(format),
       cutoff: Model.Result.format_time(cutoff)
     }
-  end
-
-  defp map_results(results) do
-    results
-    |> Enum.map(&Model.Result.to_map/1)
-    |> Enum.sort_by(fn map -> {map.average, map.best_solve} end)
   end
 
   def map_round_format("ao5"), do: "Average of 5"
