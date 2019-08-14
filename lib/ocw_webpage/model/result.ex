@@ -80,7 +80,7 @@ defmodule OcwWebpage.Model.Result do
   defp add_zero_if_needed(time) when time < 10, do: "0#{time}"
   defp add_zero_if_needed(time), do: "#{time}"
 
-  @spec calculate_average(t(), :atom) :: t()
+  @spec calculate_average(t(), atom()) :: t()
   def calculate_average(model, :ao5) do
     calculate_average_of_five(model)
   end

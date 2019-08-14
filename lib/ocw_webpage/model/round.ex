@@ -43,7 +43,8 @@ defmodule OcwWebpage.Model.Round do
           event_name: String.t(),
           name: String.t(),
           results: [map()],
-          cutoff: integer | nil,
+          cutoff: String.t(),
+          format: String.t(),
           tournament_name: String.t()
         }
   def to_map(%__MODULE__{

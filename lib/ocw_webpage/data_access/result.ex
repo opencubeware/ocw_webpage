@@ -2,7 +2,7 @@ defmodule OcwWebpage.DataAccess.Result do
   import Ecto.Query, only: [from: 2]
   alias OcwWebpage.{Repo, DataAccess, DataAccess.Schemas, Model, Constants}
 
-  @spec get(String.t()) :: FE.Result.t()
+  @spec get(String.t()) :: FE.Result.t(Model.Result.t())
   def get(index) do
     from(r in Schemas.Result, where: r.id == ^index, preload: [person: [country: [:continent]]])
     |> Repo.all()
@@ -41,7 +41,6 @@ defmodule OcwWebpage.DataAccess.Result do
   end
 
   @spec update_times_in_db(Model.Result.t()) :: FE.Result.t(%Schemas.Result{})
-
   def update_times_in_db(model) do
     Schemas.Result
     |> Repo.get(model.id)
@@ -60,7 +59,7 @@ defmodule OcwWebpage.DataAccess.Result do
     {:ok, result}
   end
 
-  @spec validate_and_transform_params(map()) :: FE.Result.t(list(integer))
+  @spec validate_and_transform_params(map()) :: FE.Result.t(map(), :param_not_integer)
   def validate_and_transform_params(%{
         "result" => %{
           "first" => first,
