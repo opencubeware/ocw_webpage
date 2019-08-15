@@ -1,11 +1,12 @@
 defmodule OcwWebpage.Model.Result do
+  use Bitwise, only_operators: true
   alias OcwWebpage.Model
   defstruct [:id, :attempts, :best_solve, :average, :competitor]
 
   @type t :: %__MODULE__{
           id: integer(),
-          attempts: [FE.Maybe.t(integer)],
-          best_solve: FE.Maybe.t(integer),
+          attempts: [FE.Maybe.t(integer | atom())],
+          best_solve: FE.Maybe.t(integer | atom()),
           average: FE.Maybe.t(integer),
           competitor: Model.Person.t()
         }
@@ -23,15 +24,21 @@ defmodule OcwWebpage.Model.Result do
         }) :: t()
   def new(%{id: id, attempts: attempts, average: average, person: competitor}) do
     competitor = Model.Person.new(competitor)
+    encoded_attempts = attempts |> Enum.map(&encode_time/1)
 
     struct(__MODULE__, %{
       id: id,
-      attempts: attempts |> Enum.map(&FE.Maybe.new/1),
-      average: FE.Maybe.new(average),
-      best_solve: attempts |> format_best_solve() |> FE.Maybe.new(),
+      attempts: encoded_attempts |> Enum.map(&FE.Maybe.new/1),
+      average: average |> encode_time() |> FE.Maybe.new(),
+      best_solve: encoded_attempts |> format_best_solve() |> FE.Maybe.new(),
       competitor: competitor
     })
   end
+
+  defp encode_time(nil), do: nil
+  defp encode_time(time) when (time &&& 2) == 2, do: :dns
+  defp encode_time(time) when (time &&& 1) == 1, do: :dnf
+  defp encode_time(time), do: time >>> 2
 
   @spec to_map(t()) :: %{
           id: integer,
@@ -61,6 +68,8 @@ defmodule OcwWebpage.Model.Result do
 
   @spec format_time(integer | FE.Maybe.t(integer)) :: String.t()
   def format_time(:nothing), do: ""
+  def format_time({:just, :dns}), do: "DNS"
+  def format_time({:just, :dnf}), do: "DNF"
   def format_time({:just, average}), do: format_time(average)
 
   def format_time(centiseconds) when is_integer(centiseconds) do

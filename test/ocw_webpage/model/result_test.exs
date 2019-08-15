@@ -11,10 +11,11 @@ defmodule OcwWebpage.Model.ResultTest do
       first_name = "John"
       last_name = "Doe"
       wca_id = "2009wcaid"
-      attempts = [730, 700, 840, 690, 700]
+      attempts = [2920, 2800, 3360, 2760, 2800]
       maybe_attempts = [{:just, 730}, {:just, 700}, {:just, 840}, {:just, 690}, {:just, 700}]
       best_solve = 690
       average = 720
+      shifted_average = 2880
       continent = %{name: continent_name}
       country = %{continent: continent, name: country_name, iso2: country_iso2}
       person = %{country: country, first_name: first_name, last_name: last_name, wca_id: wca_id}
@@ -38,7 +39,7 @@ defmodule OcwWebpage.Model.ResultTest do
                Result.new(%{
                  id: id,
                  attempts: attempts,
-                 average: average,
+                 average: shifted_average,
                  person: person
                })
     end

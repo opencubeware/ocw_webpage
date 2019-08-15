@@ -322,126 +322,159 @@ round6 = Repo.insert!(%Round{round_name: round_name2, event: event3, cutoff: nil
 
 Repo.insert(%Result{
   round: round1,
-  attempts: [510, 620, 730, 580, 740],
-  average: 636,
+  attempts: [2040, 2480, 2920, 2320, 2960],
+  average: 2544,
   competitor_id: person1.id
 })
 
 Repo.insert(%Result{
   round: round1,
-  attempts: [810, 620, 730, 580, 740],
-  average: 696,
+  attempts: [3240, 2480, 2920, 2320, 2960],
+  average: 2784,
   competitor_id: person2.id
 })
 
 Repo.insert(%Result{
   round: round1,
-  attempts: [710, 620, 580, 720, 480],
-  average: 622,
+  attempts: [2840, 2480, 2320, 2880, 1920],
+  average: 2488,
   competitor_id: person3.id
 })
 
 Repo.insert(%Result{
   round: round3,
-  attempts: [310, 620, 730, 530, 740],
-  average: 622,
+  attempts: [1240, 2480, 2920, 2120, 2960],
+  average: 2488,
   competitor_id: person1.id
 })
 
 Repo.insert(%Result{
   round: round3,
-  attempts: [710, 620, 580, 720, 480],
-  average: 586,
+  attempts: [2840, 2480, 2320, 2880, 1920],
+  average: 2344,
   competitor_id: person2.id
 })
 
 Repo.insert(%Result{
   round: round3,
-  attempts: [310, 620, 730, 530, 740],
-  average: 586,
+  attempts: [1240, 2480, 2920, 2120, 2960],
+  average: 2344,
   competitor_id: person3.id
 })
 
 Repo.insert(%Result{
   round: round2,
-  attempts: [810, 620, 730, 580, 740],
-  average: 696,
+  attempts: [3240, 2480, 2920, 2320, 2960],
+  average: 2784,
   competitor_id: person1.id
 })
 
 Repo.insert(%Result{
   round: round2,
-  attempts: [310, 620, 730, 530, 740],
-  average: 696,
+  attempts: [1240, 2480, 2920, 2120, 2960],
+  average: 2784,
   competitor_id: person2.id
 })
 
 Repo.insert(%Result{
   round: round2,
-  attempts: [810, 620, 730, 580, 740],
-  average: 696,
+  attempts: [3240, 2480, 2920, 2320, 2960],
+  average: 2784,
   competitor_id: person3.id
 })
 
 Repo.insert(%Result{
   round: round4,
-  attempts: [310, 620, 730, 530, 740],
-  average: 586,
+  attempts: [1240, 2480, 2920, 2120, 2960],
+  average: 2344,
   competitor_id: person1.id
 })
 
 Repo.insert(%Result{
   round: round4,
-  attempts: [810, 620, 730, 580, 740],
-  average: 586,
+  attempts: [3240, 2480, 2920, 2320, 2960],
+  average: 2344,
   competitor_id: person2.id
 })
 
 Repo.insert(%Result{
   round: round4,
-  attempts: [310, 620, 730, 530, 740],
-  average: 586,
+  attempts: [1240, 2480, 2920, 2120, 2960],
+  average: 2344,
   competitor_id: person3.id
 })
 
 Repo.insert(%Result{
   round: round5,
-  attempts: [0, 0, 0],
+  attempts: [nil, nil, nil],
   average: nil,
   competitor_id: person1.id
 })
 
 Repo.insert(%Result{
   round: round5,
-  attempts: [0, 0, 0],
+  attempts: [nil, nil, nil],
   average: nil,
   competitor_id: person2.id
 })
 
 Repo.insert(%Result{
   round: round5,
-  attempts: [0, 0, 0],
+  attempts: [nil, nil, nil],
   average: nil,
   competitor_id: person3.id
 })
 
 Repo.insert(%Result{
   round: round6,
-  attempts: [0, 0, 0],
+  attempts: [nil, nil, nil],
   average: nil,
   competitor_id: person1.id
 })
 
 Repo.insert(%Result{
   round: round6,
-  attempts: [0, 0, 0],
+  attempts: [nil, nil, nil],
   average: nil,
   competitor_id: person2.id
 })
 
 Repo.insert(%Result{
   round: round6,
-  attempts: [0, 0, 0],
+  attempts: [nil, nil, nil],
   average: nil,
   competitor_id: person3.id
 })
+
+[
+  810,
+  620,
+  730,
+  580,
+  740,
+  310,
+  620,
+  730,
+  530,
+  740,
+  810,
+  620,
+  730,
+  580,
+  740,
+  310,
+  620,
+  730,
+  530,
+  740,
+  810,
+  620,
+  730,
+  580,
+  740,
+  310,
+  620,
+  730,
+  530,
+  740
+]

@@ -4,8 +4,8 @@ defmodule OcwWebpage.Factory do
 
   def result_factory() do
     %Schemas.Result{
-      attempts: [590, 390, 490, 900, 690],
-      average: 590,
+      attempts: [2360, 1560, 1960, 3600, 2760],
+      average: 2360,
       round: build(:round),
       person: build(:person)
     }
