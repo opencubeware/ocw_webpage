@@ -12,6 +12,7 @@ defmodule OcwWebpage.Model.RoundTest do
       last_name = "Doe"
       wca_id = "2009wcaid"
       attempts = [730, 700, 840, 690, 700]
+      maybe_attempts = [{:just, 730}, {:just, 700}, {:just, 840}, {:just, 690}, {:just, 700}]
       average = 720
       best_solve = 690
       cutoff = 300
@@ -35,7 +36,7 @@ defmodule OcwWebpage.Model.RoundTest do
                format: ^format,
                results: [
                  %Result{
-                   attempts: ^attempts,
+                   attempts: ^maybe_attempts,
                    average: {:just, ^average},
                    best_solve: {:just, ^best_solve},
                    competitor: %Person{

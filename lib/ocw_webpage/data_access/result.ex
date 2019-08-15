@@ -44,7 +44,10 @@ defmodule OcwWebpage.DataAccess.Result do
   def update_times_in_db(model) do
     Schemas.Result
     |> Repo.get(model.id)
-    |> Schemas.Result.changeset(%{attempts: model.attempts, average: model.average})
+    |> Schemas.Result.changeset(%{
+      attempts: Enum.map(model.attempts, &FE.Maybe.unwrap_or(&1, nil)),
+      average: FE.Maybe.unwrap_or(model.average, nil)
+    })
     |> Repo.update()
     |> broadcast_change([:round, :updated])
   end
@@ -65,15 +68,18 @@ defmodule OcwWebpage.DataAccess.Result do
     list =
       params
       |> create_list_for_validation()
-      |> Enum.map(&maybe_replace_empty_string_with_zero/1)
+      |> Enum.map(&FE.Maybe.new/1)
+      |> Enum.map(fn result -> FE.Maybe.map(result, &maybe_replace_empty_string_with_zero/1) end)
 
-    case Enum.any?(list, fn x -> Integer.parse(x) == :error end) do
+    case Enum.any?(list, fn {:just, x} -> Integer.parse(x) == :error end) do
       false ->
         attempts =
           list
-          |> Enum.map(&String.to_integer/1)
-          |> Enum.map(&transform_from_no_dot_notation/1)
-          |> Enum.map(&maybe_replace_zero_with_no_change/1)
+          |> Enum.map(fn result -> FE.Maybe.map(result, &String.to_integer/1) end)
+          |> Enum.map(fn result -> FE.Maybe.map(result, &transform_from_no_dot_notation/1) end)
+          |> Enum.map(fn result ->
+            FE.Maybe.and_then(result, &maybe_replace_zero_with_no_change/1)
+          end)
 
         {:ok, %{attempts: attempts, id: id, format: Model.Round.map_round_format(format)}}
 
@@ -112,11 +118,11 @@ defmodule OcwWebpage.DataAccess.Result do
     [first]
   end
 
-  defp maybe_replace_empty_string_with_zero(string) when string == "", do: "0"
+  defp maybe_replace_empty_string_with_zero(""), do: "0"
   defp maybe_replace_empty_string_with_zero(string), do: string
 
-  defp maybe_replace_zero_with_no_change(0), do: :no_change
-  defp maybe_replace_zero_with_no_change(integer), do: integer
+  defp maybe_replace_zero_with_no_change(0), do: :nothing
+  defp maybe_replace_zero_with_no_change(maybe_integer), do: {:just, maybe_integer}
 
   defp transform_from_no_dot_notation(time), do: time - div(time, 10_000) * 4000
 

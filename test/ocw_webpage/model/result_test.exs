@@ -12,6 +12,7 @@ defmodule OcwWebpage.Model.ResultTest do
       last_name = "Doe"
       wca_id = "2009wcaid"
       attempts = [730, 700, 840, 690, 700]
+      maybe_attempts = [{:just, 730}, {:just, 700}, {:just, 840}, {:just, 690}, {:just, 700}]
       best_solve = 690
       average = 720
       continent = %{name: continent_name}
@@ -20,7 +21,7 @@ defmodule OcwWebpage.Model.ResultTest do
 
       assert %Result{
                id: ^id,
-               attempts: ^attempts,
+               attempts: ^maybe_attempts,
                average: {:just, ^average},
                best_solve: {:just, ^best_solve},
                competitor: %Person{
@@ -178,7 +179,7 @@ defmodule OcwWebpage.Model.ResultTest do
       first_name = "John"
       last_name = "Doe"
       wca_id = "2009wcaid"
-      attempts = [730, 700, 840, 690, 700]
+      attempts = [{:just, 730}, {:just, 700}, {:just, 840}, {:just, 690}, {:just, 700}]
 
       %{
         struct: %Result{
@@ -204,16 +205,17 @@ defmodule OcwWebpage.Model.ResultTest do
     end
 
     test "returns correct Model.Result.t() with updated attempts", %{struct: struct} do
-      attempts = [490, 590, 690, 790, 890]
+      attempts = [{:just, 490}, {:just, 590}, {:just, 690}, {:just, 790}, {:just, 890}]
 
       assert %Result{attempts: ^attempts} = Result.update_attempts(struct, attempts)
     end
 
     test "updates only fields with no :no_change", %{struct: struct} do
-      attempts = [490, :no_change, 690, :no_change, 890]
+      attempts = [{:just, 490}, :nothing, {:just, 690}, :nothing, {:just, 890}]
 
-      assert %Result{attempts: [490, 700, 690, 690, 890]} =
-               Result.update_attempts(struct, attempts)
+      assert %Result{
+               attempts: [{:just, 490}, {:just, 700}, {:just, 690}, {:just, 690}, {:just, 890}]
+             } = Result.update_attempts(struct, attempts)
     end
   end
 end

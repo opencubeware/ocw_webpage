@@ -21,7 +21,7 @@ defmodule OcwWebpage.Model.Result do
             wca_id: String.t()
           }
         }) :: t()
-  def new(%{id: id, attempts: attempts, average: average, person: competitor} = params) do
+  def new(%{id: id, attempts: attempts, average: average, person: competitor}) do
     competitor = Model.Person.new(competitor)
 
     struct(__MODULE__, %{
@@ -94,13 +94,19 @@ defmodule OcwWebpage.Model.Result do
   defp add_zero_if_needed(time), do: "#{time}"
 
   @spec calculate_average(t(), atom()) :: t()
-  def calculate_average(model, :ao5) do
-    calculate_average_of_five(model)
+  def calculate_average(%__MODULE__{attempts: attempts} = model, type) do
+    calculate_average(model, type, Enum.any?(attempts, &(&1 == FE.Maybe.nothing())))
   end
 
-  def calculate_average(%__MODULE__{attempts: attempts} = model, :mo3) do
+  defp calculate_average(model, _type, true), do: %__MODULE__{model | average: FE.Maybe.nothing()}
+
+  defp calculate_average(%__MODULE__{attempts: attempts} = model, :mo3, false) do
     mean = attempts |> Enum.sum() |> div(length(attempts))
     %__MODULE__{model | average: mean}
+  end
+
+  defp calculate_average(model, :ao5, false) do
+    calculate_average_of_five(model)
   end
 
   defp calculate_average_of_five(%__MODULE__{attempts: attempts} = model)
@@ -124,7 +130,8 @@ defmodule OcwWebpage.Model.Result do
     Enum.filter(attempts, fn x -> x != min and x != max end)
   end
 
-  @spec update_attempts(__MODULE__.t(), list(integer)) :: __MODULE__.t() | {:error, :not_an_array}
+  @spec update_attempts(__MODULE__.t(), list(FE.Maybe.t(integer))) ::
+          FE.Result.t(__MODULE__.t(), :not_an_array)
   def update_attempts(model, attempts) when is_list(attempts) do
     updated_attempts =
       model
@@ -137,6 +144,6 @@ defmodule OcwWebpage.Model.Result do
 
   def update_attempts(_model, _attempts), do: {:error, :not_an_array}
 
-  defp change_requested({x, y}) when y == :no_change, do: x
+  defp change_requested({x, y}) when y == :nothing, do: x
   defp change_requested({_x, y}), do: y
 end
