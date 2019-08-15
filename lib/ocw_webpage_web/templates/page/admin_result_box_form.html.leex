@@ -9,29 +9,29 @@
     </div>
     <div class="row">
       <div class="col s12">
-        <%= Phoenix.HTML.Form.number_input :result, :first, class: "form-input", placeholder: "First Solve..."%>
+        <%= Phoenix.HTML.Form.text_input :result, :first, class: "form-input", placeholder: "First Solve..."%>
       </div>
     </div>
     <%= if assigns.round.format in ["Average of 5", "Best of 2/Average of 5", "Mean of 3", "Best of 1/Mean of 3"] do %>
       <div class="row">
         <div class="col s12">
-          <%= Phoenix.HTML.Form.number_input :result, :second, class: "form-input", placeholder: "Second Solve..."%>
+          <%= Phoenix.HTML.Form.text_input :result, :second, class: "form-input", placeholder: "Second Solve..."%>
         </div>
       </div>
       <div class="row">
         <div class="col s12">
-          <%= Phoenix.HTML.Form.number_input :result, :third, class: "form-input", placeholder: "Third Solve..."%>
+          <%= Phoenix.HTML.Form.text_input :result, :third, class: "form-input", placeholder: "Third Solve..."%>
         </div>
       </div>
       <%= if assigns.round.format in ["Average of 5", "Best of 2/Average of 5"] do %>
         <div class="row">
           <div class="col s12">
-            <%= Phoenix.HTML.Form.number_input :result, :fourth, class: "form-input", placeholder: "Fourth Solve..."%>
+            <%= Phoenix.HTML.Form.text_input :result, :fourth, class: "form-input", placeholder: "Fourth Solve..."%>
           </div>
         </div>
         <div class="row">
           <div class="col s12">
-            <%= Phoenix.HTML.Form.number_input :result, :fifth, class: "form-input", placeholder: "Fifth Solve..."%>
+            <%= Phoenix.HTML.Form.text_input :result, :fifth, class: "form-input", placeholder: "Fifth Solve..."%>
           </div>
         </div>
       <% end %>

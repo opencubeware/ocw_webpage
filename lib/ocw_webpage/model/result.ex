@@ -36,8 +36,8 @@ defmodule OcwWebpage.Model.Result do
   end
 
   defp encode_time(nil), do: nil
-  defp encode_time(time) when (time &&& 2) == 2, do: :dns
-  defp encode_time(time) when (time &&& 1) == 1, do: :dnf
+  defp encode_time(time) when (time &&& 2) == 2, do: :dnf
+  defp encode_time(time) when (time &&& 1) == 1, do: :dns
   defp encode_time(time), do: time >>> 2
 
   @spec to_map(t()) :: %{
