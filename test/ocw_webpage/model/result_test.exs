@@ -154,20 +154,20 @@ defmodule OcwWebpage.Model.ResultTest do
     end
 
     test "calculates average when there is more than 3 attempts", %{struct: struct} do
-      attempts = [380, 390, 400]
+      attempts = [{:just, 380}, {:just, 390}, {:just, 400}]
       struct = %Result{struct | attempts: attempts}
 
-      assert %Result{average: 390} = Result.calculate_average(struct, :ao5)
+      assert %Result{average: {:just, 390}} = Result.calculate_average(struct, :ao5)
     end
 
     test "removes best and worst time when there is more than 3 attempts", %{struct: struct} do
-      attempts_1 = [530, 590, 680, 590]
+      attempts_1 = [{:just, 530}, {:just, 590}, {:just, 680}, {:just, 590}]
       struct = %Result{struct | attempts: attempts_1}
-      assert %Result{average: 590} = Result.calculate_average(struct, :ao5)
+      assert %Result{average: {:just, 590}} = Result.calculate_average(struct, :ao5)
 
-      attempts_2 = [530, 590, 600, 580, 680]
+      attempts_2 = [{:just, 530}, {:just, 590}, {:just, 600}, {:just, 580}, {:just, 680}]
       struct = %Result{struct | attempts: attempts_2}
-      assert %Result{average: 590} = Result.calculate_average(struct, :ao5)
+      assert %Result{average: {:just, 590}} = Result.calculate_average(struct, :ao5)
     end
   end
 
@@ -184,7 +184,7 @@ defmodule OcwWebpage.Model.ResultTest do
       %{
         struct: %Result{
           attempts: attempts,
-          average: nil,
+          average: :nothing,
           competitor: %Person{
             first_name: first_name,
             last_name: last_name,

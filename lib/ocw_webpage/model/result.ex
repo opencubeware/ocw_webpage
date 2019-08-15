@@ -101,8 +101,7 @@ defmodule OcwWebpage.Model.Result do
   defp calculate_average(model, _type, true), do: %__MODULE__{model | average: FE.Maybe.nothing()}
 
   defp calculate_average(%__MODULE__{attempts: attempts} = model, :mo3, false) do
-    mean = attempts |> Enum.sum() |> div(length(attempts))
-    %__MODULE__{model | average: mean}
+    %__MODULE__{model | average: calculate_standard_average(attempts)}
   end
 
   defp calculate_average(model, :ao5, false) do
@@ -116,15 +115,18 @@ defmodule OcwWebpage.Model.Result do
       |> Enum.min_max()
       |> filter_min_max(attempts)
 
-    average =
-      remaining_attempts
-      |> Enum.sum()
-      |> div(length(remaining_attempts))
-
-    %__MODULE__{model | average: average}
+    %__MODULE__{model | average: calculate_standard_average(remaining_attempts)}
   end
 
   defp calculate_average_of_five(model), do: model
+
+  defp calculate_standard_average(attempts) do
+    attempts
+    |> Enum.map(&FE.Maybe.unwrap!/1)
+    |> Enum.sum()
+    |> FE.Maybe.new()
+    |> FE.Maybe.map(&div(&1, length(attempts)))
+  end
 
   defp filter_min_max({min, max}, attempts) do
     Enum.filter(attempts, fn x -> x != min and x != max end)
