@@ -60,19 +60,11 @@ defmodule OcwWebpage.DataAccess.Result do
   end
 
   @spec validate_and_transform_params(map()) :: FE.Result.t(map(), :param_not_integer)
-  def validate_and_transform_params(%{
-        "result" => %{
-          "first" => first,
-          "second" => second,
-          "third" => third,
-          "fourth" => fourth,
-          "fifth" => fifth,
-          "format" => format,
-          "id" => id
-        }
-      }) do
+
+  def validate_and_transform_params(%{"result" => %{"id" => id, "format" => format}} = params) do
     list =
-      [first, second, third, fourth, fifth]
+      params
+      |> create_list_for_validation()
       |> Enum.map(&maybe_replace_empty_string_with_zero/1)
 
     case Enum.any?(list, fn x -> Integer.parse(x) == :error end) do
@@ -88,6 +80,36 @@ defmodule OcwWebpage.DataAccess.Result do
       true ->
         {:error, :param_not_integer}
     end
+  end
+
+  defp create_list_for_validation(%{
+         "result" => %{
+           "first" => first,
+           "second" => second,
+           "third" => third,
+           "fourth" => fourth,
+           "fifth" => fifth
+         }
+       }) do
+    [first, second, third, fourth, fifth]
+  end
+
+  defp create_list_for_validation(%{
+         "result" => %{
+           "first" => first,
+           "second" => second,
+           "third" => third
+         }
+       }) do
+    [first, second, third]
+  end
+
+  defp create_list_for_validation(%{
+         "result" => %{
+           "first" => first
+         }
+       }) do
+    [first]
   end
 
   defp maybe_replace_empty_string_with_zero(string) when string == "", do: "0"
