@@ -41,13 +41,12 @@ defmodule OcwWebpage.Model.Round do
   defp build_and_sort_results(results) do
     results
     |> Enum.map(&Model.Result.new/1)
-    |> Enum.sort(
-      &((&1.average < &2.average or
-           (&1.average == &2.average and
-              &1.best_solve < &2.best_solve)) and
-          &1.average != FE.Maybe.nothing())
-    )
+    |> Enum.sort_by(fn result -> {result.average, result.best_solve} end)
+    |> Enum.split_while(fn result -> result.average == FE.Maybe.nothing() end)
+    |> push_nothings_to_the_end()
   end
+
+  defp push_nothings_to_the_end({nothings, results}), do: results ++ nothings
 
   @spec to_map(t()) :: %{
           id: integer,

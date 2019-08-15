@@ -4,7 +4,7 @@ defmodule OcwWebpage.Model.Result do
 
   @type t :: %__MODULE__{
           id: integer(),
-          attempts: [integer()],
+          attempts: [FE.Maybe.t(integer)],
           best_solve: FE.Maybe.t(integer),
           average: FE.Maybe.t(integer),
           competitor: Model.Person.t()
@@ -21,12 +21,12 @@ defmodule OcwWebpage.Model.Result do
             wca_id: String.t()
           }
         }) :: t()
-  def new(%{id: id, attempts: attempts, average: average, person: competitor}) do
+  def new(%{id: id, attempts: attempts, average: average, person: competitor} = params) do
     competitor = Model.Person.new(competitor)
 
     struct(__MODULE__, %{
       id: id,
-      attempts: attempts,
+      attempts: attempts |> Enum.map(&FE.Maybe.new/1),
       average: FE.Maybe.new(average),
       best_solve: attempts |> format_best_solve() |> FE.Maybe.new(),
       competitor: competitor
