@@ -112,8 +112,8 @@ defmodule OcwWebpage.Model.Result do
       |> FE.Result.and_then(&calculate_real_average(&1, type))
 
     case average do
-      {:error, model} -> model
-      {:ok, model} -> model
+      {:error, model} -> {:ok, model}
+      {:ok, model} -> {:ok, model}
     end
   end
 
@@ -187,7 +187,7 @@ defmodule OcwWebpage.Model.Result do
       |> Enum.zip(attempts)
       |> Enum.map(&change_requested/1)
 
-    %__MODULE__{model | attempts: updated_attempts}
+    {:ok, %__MODULE__{model | attempts: updated_attempts}}
   end
 
   def update_attempts(_model, _attempts), do: {:error, :not_an_array}

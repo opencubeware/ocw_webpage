@@ -145,30 +145,30 @@ defmodule OcwWebpage.Model.ResultTest do
     end
 
     test "return nil when there is less than 3 attempts", %{struct: struct} do
-      attempts_1 = [590]
+      attempts_1 = [{:just, 590}, :nothing, :nothing, :nothing, :nothing]
       struct = %Result{struct | attempts: attempts_1}
-      assert %Result{average: nil} = Result.calculate_average(struct, :ao5)
+      assert {:ok, %Result{average: :nothing}} = Result.calculate_average(struct, :ao5)
 
-      attempts_2 = [590, 690]
+      attempts_2 = [{:just, 590}, {:just, 690}, :nothing, :nothing, :nothing]
       struct = %Result{struct | attempts: attempts_2}
-      assert %Result{average: nil} = Result.calculate_average(struct, :ao5)
+      assert {:ok, %Result{average: :nothing}} = Result.calculate_average(struct, :ao5)
     end
 
     test "calculates average when there is more than 3 attempts", %{struct: struct} do
       attempts = [{:just, 380}, {:just, 390}, {:just, 400}]
       struct = %Result{struct | attempts: attempts}
 
-      assert %Result{average: {:just, 390}} = Result.calculate_average(struct, :ao5)
+      assert {:ok, %Result{average: {:just, 390}}} = Result.calculate_average(struct, :ao5)
     end
 
     test "removes best and worst time when there is more than 3 attempts", %{struct: struct} do
       attempts_1 = [{:just, 530}, {:just, 590}, {:just, 680}, {:just, 590}]
       struct = %Result{struct | attempts: attempts_1}
-      assert %Result{average: {:just, 590}} = Result.calculate_average(struct, :ao5)
+      assert {:ok, %Result{average: {:just, 590}}} = Result.calculate_average(struct, :ao5)
 
       attempts_2 = [{:just, 530}, {:just, 590}, {:just, 600}, {:just, 580}, {:just, 680}]
       struct = %Result{struct | attempts: attempts_2}
-      assert %Result{average: {:just, 590}} = Result.calculate_average(struct, :ao5)
+      assert {:ok, %Result{average: {:just, 590}}} = Result.calculate_average(struct, :ao5)
     end
   end
 
@@ -208,15 +208,16 @@ defmodule OcwWebpage.Model.ResultTest do
     test "returns correct Model.Result.t() with updated attempts", %{struct: struct} do
       attempts = [{:just, 490}, {:just, 590}, {:just, 690}, {:just, 790}, {:just, 890}]
 
-      assert %Result{attempts: ^attempts} = Result.update_attempts(struct, attempts)
+      assert {:ok, %Result{attempts: ^attempts}} = Result.update_attempts(struct, attempts)
     end
 
     test "updates only fields with no :no_change", %{struct: struct} do
       attempts = [{:just, 490}, :nothing, {:just, 690}, :nothing, {:just, 890}]
 
-      assert %Result{
-               attempts: [{:just, 490}, {:just, 700}, {:just, 690}, {:just, 690}, {:just, 890}]
-             } = Result.update_attempts(struct, attempts)
+      assert {:ok,
+              %Result{
+                attempts: [{:just, 490}, {:just, 700}, {:just, 690}, {:just, 690}, {:just, 890}]
+              }} = Result.update_attempts(struct, attempts)
     end
   end
 end

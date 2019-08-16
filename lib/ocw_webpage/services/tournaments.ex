@@ -36,8 +36,8 @@ defmodule OcwWebpage.Services.Tournaments do
            DataAccess.Result.validate_and_transform_params(params) do
       id
       |> DataAccess.Result.get()
-      |> Result.map(&Model.Result.update_attempts(&1, attempts))
-      |> Result.map(&Model.Result.calculate_average(&1, format))
+      |> Result.and_then(&Model.Result.update_attempts(&1, attempts))
+      |> Result.and_then(&Model.Result.calculate_average(&1, format))
       |> Result.and_then(&DataAccess.Result.update_times_in_db/1)
     end
   end
