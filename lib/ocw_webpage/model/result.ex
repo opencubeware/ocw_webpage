@@ -103,17 +103,54 @@ defmodule OcwWebpage.Model.Result do
   defp add_zero_if_needed(time), do: "#{time}"
 
   @spec calculate_average(t(), atom()) :: t()
-  def calculate_average(%__MODULE__{attempts: attempts} = model, type) do
-    calculate_average(model, type, Enum.any?(attempts, &(&1 == FE.Maybe.nothing())))
+  def calculate_average(%__MODULE__{} = model, type) do
+    average =
+      model
+      |> FE.Result.ok()
+      |> FE.Result.and_then(&check_for_dnf_or_dns(&1, type))
+      |> FE.Result.and_then(&check_for_nil(&1, type))
+      |> FE.Result.and_then(&calculate_real_average(&1, type))
+
+    case average do
+      {:error, model} -> model
+      {:ok, model} -> model
+    end
   end
 
-  defp calculate_average(model, _type, true), do: %__MODULE__{model | average: FE.Maybe.nothing()}
+  defp check_for_dnf_or_dns(%__MODULE__{attempts: attempts} = model, type) do
+    treshold =
+      case type do
+        :ao5 -> 2
+        :mo3 -> 1
+      end
 
-  defp calculate_average(%__MODULE__{attempts: attempts} = model, :mo3, false) do
-    %__MODULE__{model | average: calculate_standard_average(attempts)}
+    filtered_attempts = Enum.filter(attempts, fn attempt -> attempt != FE.Maybe.nothing() end)
+
+    case Enum.count(filtered_attempts, fn {:just, attempt} -> attempt in [:dnf, :dns] end) >=
+           treshold do
+      true -> {:error, %__MODULE__{model | average: {:just, :dnf}}}
+      false -> {:ok, model}
+    end
   end
 
-  defp calculate_average(model, :ao5, false) do
+  defp check_for_nil(%__MODULE__{attempts: attempts} = model, type) do
+    treshold =
+      case type do
+        :ao5 -> 3
+        :mo3 -> 1
+      end
+
+    case Enum.count(attempts, fn attempt -> attempt == FE.Maybe.nothing() end) >= treshold do
+      true -> {:error, %__MODULE__{model | average: FE.Maybe.nothing()}}
+      false -> {:ok, model}
+    end
+  end
+
+  defp calculate_real_average(%__MODULE__{attempts: attempts} = model, :mo3) do
+    {:ok, %__MODULE__{model | average: calculate_standard_average(attempts)}}
+  end
+
+  defp calculate_real_average(model, :ao5) do
     calculate_average_of_five(model)
   end
 
@@ -124,7 +161,7 @@ defmodule OcwWebpage.Model.Result do
       |> Enum.min_max()
       |> filter_min_max(attempts)
 
-    %__MODULE__{model | average: calculate_standard_average(remaining_attempts)}
+    {:ok, %__MODULE__{model | average: calculate_standard_average(remaining_attempts)}}
   end
 
   defp calculate_average_of_five(model), do: model
