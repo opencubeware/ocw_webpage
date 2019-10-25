@@ -1,37 +1,12 @@
 <div class="row table__board">
   <div class="col s12 no-padding">
-    <table>
-      <thead>
-        <tr>
-          <th>Place</th>
-          <th>Competitor</th>
-          <th>1</th>
-          <th>2</th>
-          <th>3</th>
-          <th>4</th>
-          <th>5</th>
-          <th>Best</th>
-          <th>Avg</th>
-        </tr>
-      </thead>
-      <tbody>
-        <%= for {result, index} <- Enum.with_index(@results) do %>
-          <tr class="pointer" key="<%= index %>" phx-click="change-player" phx-value="<%= result.id %>">
-            <td key="<%= index %>">
-              <%= index + 1 %>
-            </td>
-            <td key="<%= result.competitor.first_name %> <%= result.competitor.last_name %>">
-              <b><%= result.competitor.first_name %> <%= result.competitor.last_name %></b>
-            </td>
-            <%= for attempt <- result.attempts do %>
-              <td><%= attempt %></td>
-            <% end %>
-            <td><%= result.best_solve %></td>
-            <td><%= result.average %></td>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <%= case assigns.round.format do %>
+      <% average when average == "Average of 5" or average == "Best of 2/Average of 5" -> %>
+        <%= OcwWebpageWeb.PageView.render("average_of_five_table.html", assigns) %>
+      <% mean when mean == "Mean of 3" or mean == "Best of 1/Mean of 3" -> %>
+        <%= OcwWebpageWeb.PageView.render("mean_of_three_table.html", assigns) %>
+      <% "Best of 1" -> %>
+        <%= OcwWebpageWeb.PageView.render("best_of_one_table.html", assigns) %>
+    <% end %>
   </div>
 </div>

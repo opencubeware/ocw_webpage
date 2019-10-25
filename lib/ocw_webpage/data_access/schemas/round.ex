@@ -8,5 +8,7 @@ defmodule OcwWebpage.DataAccess.Schemas.Round do
     has_many(:results, Result)
     belongs_to(:round_name, RoundName)
     belongs_to(:event, Event)
+    field(:cutoff, :integer, null: true)
+    field(:format, :string, null: false, default: "ao5")
   end
 end

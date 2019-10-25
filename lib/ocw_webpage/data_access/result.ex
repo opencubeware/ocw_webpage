@@ -1,8 +1,9 @@
 defmodule OcwWebpage.DataAccess.Result do
+  use Bitwise, only_operators: true
   import Ecto.Query, only: [from: 2]
   alias OcwWebpage.{Repo, DataAccess, DataAccess.Schemas, Model, Constants}
 
-  @spec get(String.t()) :: FE.Result.t()
+  @spec get(String.t()) :: FE.Result.t(Model.Result.t())
   def get(index) do
     from(r in Schemas.Result, where: r.id == ^index, preload: [person: [country: [:continent]]])
     |> Repo.all()
@@ -41,14 +42,26 @@ defmodule OcwWebpage.DataAccess.Result do
   end
 
   @spec update_times_in_db(Model.Result.t()) :: FE.Result.t(%Schemas.Result{})
-
   def update_times_in_db(model) do
+    decoded_attempts =
+      model.attempts
+      |> Enum.map(&FE.Maybe.unwrap_or(&1, nil))
+      |> Enum.map(&decode_time/1)
+
     Schemas.Result
     |> Repo.get(model.id)
-    |> Schemas.Result.changeset(%{attempts: model.attempts, average: model.average})
+    |> Schemas.Result.changeset(%{
+      attempts: decoded_attempts,
+      average: model.average |> FE.Maybe.unwrap_or(nil) |> decode_time()
+    })
     |> Repo.update()
     |> broadcast_change([:round, :updated])
   end
+
+  defp decode_time(nil), do: nil
+  defp decode_time(:dnf), do: 10
+  defp decode_time(:dns), do: 1
+  defp decode_time(time), do: time <<< 2
 
   defp broadcast_change({:ok, result}, event) do
     Phoenix.PubSub.broadcast(
@@ -60,42 +73,80 @@ defmodule OcwWebpage.DataAccess.Result do
     {:ok, result}
   end
 
-  @spec validate_and_transform_params(map()) :: FE.Result.t(list(integer))
-  def validate_and_transform_params(%{
-        "result" => %{
-          "first" => first,
-          "second" => second,
-          "third" => third,
-          "fourth" => fourth,
-          "fifth" => fifth,
-          "id" => id
-        }
-      }) do
-    list =
-      [first, second, third, fourth, fifth]
-      |> Enum.map(&maybe_replace_empty_string_with_zero/1)
+  @spec validate_and_transform_params(map()) :: FE.Result.t(map(), :param_not_integer)
 
-    case Enum.any?(list, fn x -> Integer.parse(x) == :error end) do
+  def validate_and_transform_params(%{"result" => %{"id" => id, "format" => format}} = params) do
+    list =
+      params
+      |> create_list_for_validation()
+      |> Enum.map(&FE.Maybe.new/1)
+      |> Enum.map(fn result -> FE.Maybe.map(result, &maybe_replace_empty_string_with_zero/1) end)
+
+    case Enum.any?(list, &is_incorrect_string?/1) do
       false ->
         attempts =
           list
-          |> Enum.map(&String.to_integer/1)
-          |> Enum.map(&transform_from_no_dot_notation/1)
-          |> Enum.map(&maybe_replace_zero_with_no_change/1)
+          |> Enum.map(fn result ->
+            FE.Maybe.map(result, &change_to_integer_if_not_dns_or_dnf/1)
+          end)
+          |> Enum.map(fn result -> FE.Maybe.map(result, &transform_from_no_dot_notation/1) end)
+          |> Enum.map(fn result ->
+            FE.Maybe.and_then(result, &maybe_replace_zero_with_no_change/1)
+          end)
 
-        {:ok, %{attempts: attempts, id: id}}
+        {:ok, %{attempts: attempts, id: id, format: Model.Round.map_round_format(format)}}
 
       true ->
         {:error, :param_not_integer}
     end
   end
 
-  defp maybe_replace_empty_string_with_zero(string) when string == "", do: "0"
+  defp create_list_for_validation(%{
+         "result" => %{
+           "first" => first,
+           "second" => second,
+           "third" => third,
+           "fourth" => fourth,
+           "fifth" => fifth
+         }
+       }) do
+    [first, second, third, fourth, fifth]
+  end
+
+  defp create_list_for_validation(%{
+         "result" => %{
+           "first" => first,
+           "second" => second,
+           "third" => third
+         }
+       }) do
+    [first, second, third]
+  end
+
+  defp create_list_for_validation(%{
+         "result" => %{
+           "first" => first
+         }
+       }) do
+    [first]
+  end
+
+  defp is_incorrect_string?({:just, string}) do
+    string not in ["dnf", "dns"] and Integer.parse(string) == :error
+  end
+
+  defp change_to_integer_if_not_dns_or_dnf("dnf"), do: :dnf
+  defp change_to_integer_if_not_dns_or_dnf("dns"), do: :dns
+  defp change_to_integer_if_not_dns_or_dnf(string), do: String.to_integer(string)
+
+  defp maybe_replace_empty_string_with_zero(""), do: "0"
   defp maybe_replace_empty_string_with_zero(string), do: string
 
-  defp maybe_replace_zero_with_no_change(0), do: :no_change
-  defp maybe_replace_zero_with_no_change(integer), do: integer
+  defp maybe_replace_zero_with_no_change(0), do: :nothing
+  defp maybe_replace_zero_with_no_change(maybe_integer), do: {:just, maybe_integer}
 
+  defp transform_from_no_dot_notation(:dnf), do: :dnf
+  defp transform_from_no_dot_notation(:dns), do: :dns
   defp transform_from_no_dot_notation(time), do: time - div(time, 10_000) * 4000
 
   defp empty_or_not(list) do

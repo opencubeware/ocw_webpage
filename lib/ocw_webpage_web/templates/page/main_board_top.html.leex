@@ -5,7 +5,12 @@
   <div s={2} class="col s2 round">
     <%= @round.name %>
   </div>
-  <div s={8} class="col s2 description">
-    Description
+  <%= if @round.cutoff != "" do %>
+    <div class="col s4 cutoff">
+      Cutoff time <%= @round.cutoff %>
+    </div>
+  <% end %>
+  <div class="col s4 format">
+    <%= @round.format %>
   </div>
 </div>
